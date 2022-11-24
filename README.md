@@ -8,7 +8,7 @@ C4Context
     title System Context diagram for Life Complience System
     Boundary(b0, "World with people that need to comply") {
         Person(registered, "Regis Terry", "has personal account and some todos")     
-        Person(unregistered, "Regis Terry", "has personal account and some todos")     
+        Person(unregistered, "Carla Curious", "first time visitor")     
         Boundary(b1, "accessible systems") {
             Container(SPA, "Single Page Application", "React", "manage your acount and todos")
             Container(BFF, "Backend for Frontend", "java servlet api"," REST API")
