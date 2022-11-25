@@ -8,7 +8,7 @@ substitutions:
 steps:
   - id: build
     name: gcr.io/cloud-builders/docker
-    dir: installation-app
+    dir: $_SERVICE_NAME
     args:
       - build
       - -t
