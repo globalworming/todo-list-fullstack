@@ -1,55 +1,73 @@
-# Hooks TODO
-A simple todo app built using react hooks.
+# Webnative React TodoMVC
 
-A live demo is available at: https://jacob-ebey.github.io/hooks-todo/
+[![Built by FISSION](https://img.shields.io/badge/⌘-Built_by_FISSION-purple.svg)](https://fission.codes)
+[![Built by FISSION](https://img.shields.io/badge/webnative-v0.34.1-purple.svg )](https://github.com/fission-suite/webnative)
+[![Discord](https://img.shields.io/discord/478735028319158273.svg)](https://discord.gg/zAQBDEq)
+[![Discourse](https://img.shields.io/discourse/https/talk.fission.codes/topics)](https://talk.fission.codes)
 
-## Available Scripts
+The repository implements TodoMVC with React and [webnative](https://github.com/fission-suite/webnative). The repository includes branches that demonstrate the same app configured with Create React App, Vite, and Webpack:
 
-In the project directory, you can run:
+- [Create React App build](https://github.com/fission-suite/react-todomvc)
+- [Vite build](https://github.com/fission-suite/react-todomvc/tree/vite)
+- [Webpack build](https://github.com/fission-suite/react-todomvc/tree/webpack)
 
-### `npm dev`
+## Migration to Vite or Webpack
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+The app was initialized with Create React App and migrated to Vite and Webpack 5. See the [Migrate from CRA to Vite](https://github.com/fission-suite/react-todomvc/pull/2), and [Migrate from CRA to Webpack](https://github.com/fission-suite/react-todomvc/pull/3) pull requests for guides and diffs to help you migrate from Create React App.
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+⚠️ Parcel 2 also has a branch but is not currently supported. Please see our build tool and bundler support tracking issue for the latest support notes: https://github.com/fission-codes/webnative/issues/293
+## Try it
 
-### `npm test`
+The app is live at: https://young-turquoise-metalic-fairy.fission.app/
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Setup
 
-### `npm run build`
+Install dependencies.
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```shell
+npm install
+```
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
+## Develop
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+To work on the application locally:
 
-### `npm start`
+```shell
+npm start
+```
 
-Serves the production build from the "build" folder.
+Open the app in your web browser:
+- Create React App and Vite: `localhost:3000`
+- Webpack: `localhost:8080`
 
-### `npm run deploy`
+## Build
 
-Creates and deploys a production build to github pages.
+Build the application.
 
-### `npm run eject`
+```shell
+npm run build
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+The build will be in `build` for Create React app, `dist` for Vite and `public` for Webpack.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Publish
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+You can publish your own version of this app with Fission! [Install the Fission CLI](https://guide.fission.codes/developers/installation) if you haven't already. 
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+Build the application before the following steps.
 
-## Learn More
+Delete `fission.yaml` and then register your own subdomain.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```shell
+fission app register
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+The CLI should prompt you with the appropriate build directory depending on which build tool or bundler you used.
+
+Publish the app.
+
+```shell
+fission app publish
+```
+
+Your version of the app is now live!
