@@ -3,9 +3,7 @@ WORKDIR /app
 ENV PATH /app/node_modules/.bin:$PATH
 COPY package.json ./
 COPY package-lock.json ./
-# ENV  NODE_OPTIONS "--openssl-legacy-provider"
-RUN npm ci # --legacy-peer-deps
-# RUN npm install react-scripts@2.1.5 -g
+RUN npm ci
 COPY ./src ./src
 COPY ./public ./public
 RUN npm run build
