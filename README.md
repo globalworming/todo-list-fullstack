@@ -33,6 +33,7 @@ Rel(TODO, DB, "client library")
 Rel(USER, DB, "client library")
 UpdateLayoutConfig($c4ShapeInRow="2", $c4BoundaryInRow="2")    
 ```
+base TODOMVC application from https://github.com/tastejs/todomvc
 
 ## init
 * create GCP project, enable billing
