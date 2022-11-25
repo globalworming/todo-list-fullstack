@@ -22,7 +22,6 @@ C4Context
             }
         }
     }
-     
 BiRel(registered, SPA, "with desktop webbrowser")
 BiRel(unregistered, SPA, "with desktop webbrowser")
 BiRel(SPA, BFF, "http")
@@ -32,11 +31,14 @@ BiRel(TODO, USER, "gRPC")
 BiRel(AUTH, USER, "gRPC")
 Rel(TODO, DB, "client library")
 Rel(USER, DB, "client library")
-
-UpdateLayoutConfig($c4ShapeInRow="2", $c4BoundaryInRow="2")
-    
+UpdateLayoutConfig($c4ShapeInRow="2", $c4BoundaryInRow="2")    
 ```
 
-## run
-create the infrastructure with terraform:
-
+## init
+* create GCP project, enable billing
+* install gcloud and terraform
+* login  `gcloud auth application-default login`
+* create billing budget `gcloud alpha billing budgets create --billing-account=$your_billling_account --display-name="budget" --budget-amount=5.00EUR --threshold-rule=percent=0.70 --threshold-rule=percent=0.90,basis=forecasted-spend`
+* run terraform init and terraform apply (might require multiple tries first time for apis to be enabled). 
+* `Error creating Trigger: googleapi: Error 400: Repository mapping does not exist. Please visit https://console.cloud.google.com/cloud-build/triggers/connect?project=... to connect a repository to your project` do that
+* 
