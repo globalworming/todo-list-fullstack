@@ -5,13 +5,6 @@ steps:
     entrypoint: npm
     args:
       - ci
-  - id: prettier
-    name: node:19.1.0-alpine3.16
-    dir: single-page-application
-    entrypoint: npm
-    args:
-      - run
-      - format:check
   - id: eslint
     name: node:19.1.0-alpine3.16
     dir: single-page-application

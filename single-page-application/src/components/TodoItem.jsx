@@ -1,22 +1,22 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
 export default function TodoItem({ todo, onUpdate }) {
   const [editing, setEditing] = useState(false);
   const [modifiedTodo, setModifiedTodo] = useState(todo);
 
   const onCompletion = async () => {
-    onUpdate({ detail: { type: 'toggleCompletion', id: todo.id } })
-  }
+    onUpdate({ detail: { type: 'toggleCompletion', id: todo.id } });
+  };
 
   const onDelete = async () => {
-    onUpdate({ detail: { type: 'delete', id: todo.id } })
-  }
+    onUpdate({ detail: { type: 'delete', id: todo.id } });
+  };
 
-  const onNewValue = event => {
-    setModifiedTodo({ ...modifiedTodo, title: event.target.value })
-  }
+  const onNewValue = (event) => {
+    setModifiedTodo({ ...modifiedTodo, title: event.target.value });
+  };
 
-  const onKeyDown = event => {
+  const onKeyDown = (event) => {
     switch (event.key) {
       case 'Escape':
         setModifiedTodo(todo);
@@ -31,41 +31,43 @@ export default function TodoItem({ todo, onUpdate }) {
       default:
         break;
     }
-  }
+  };
 
   const onBlur = () => {
     handleTitleUpdate();
     setEditing(false);
-  }
+  };
 
   const handleTitleUpdate = () => {
     const trimmedTitle = modifiedTodo.title.trim();
-    trimmedTitle.length > 0 ?
-      onUpdate({
+    trimmedTitle.length > 0
+      ? onUpdate({
         detail: {
           type: 'update',
-          todo: { ...modifiedTodo, title: trimmedTitle }
-        }
-      }) :
-      onDelete();
-  }
+          todo: { ...modifiedTodo, title: trimmedTitle },
+        },
+      })
+      : onDelete();
+  };
 
   // Set to editing on double click
-  const handleViewClick = event => {
+  const handleViewClick = (event) => {
     switch (event.detail) {
       case 2:
-        setEditing(true)
+        setEditing(true);
         break;
 
       default:
         break;
     }
-  }
+  };
 
   return (
     <li
       onClick={handleViewClick}
-      className={`${editing ? "editing" : ""} ${todo.completed ? "completed" : ""}`}
+      className={`${editing ? 'editing' : ''} ${
+        todo.completed ? 'completed' : ''
+      }`}
     >
       <div className="view">
         <input

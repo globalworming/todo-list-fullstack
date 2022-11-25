@@ -13,7 +13,7 @@ resource "google_cloudbuild_trigger" "deploy" {
       branch = "^main$"
     }
   }
-  filename   = "${local.service_name}/.google/deploy.yaml"
+  filename   = "${local.service_name}/.google/cloudbuild.yaml"
 }
 
 # Create cloud build trigger & Push service to git hub
@@ -29,7 +29,7 @@ resource "google_cloudbuild_trigger" "pr" {
       invert_regex = true
     }
   }
-  filename   = "${local.service_name}/.google/pr.yaml"
+  filename   = "${local.service_name}/.google/cloudbuild-pr.yaml"
 }
 
 resource "google_cloud_run_service" "single_page_application" {

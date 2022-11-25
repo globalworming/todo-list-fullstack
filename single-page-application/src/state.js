@@ -1,23 +1,21 @@
-import { useState } from 'react'
-
+import { useState } from 'react';
 
 export const useAsyncReducer = (reducer, initialState) => {
-  const [state, setState] = useState(initialState),
-    dispatch = async action => {
-      setState(await reducer(state ?? initialState, action))
-    };
+  const [state, setState] = useState(initialState);
+  const dispatch = async (action) => {
+    setState(await reducer(state ?? initialState, action));
+  };
 
   return [state, dispatch];
-}
+};
 
-const todos = [
-  {id: 1, title: "sometitlw", completed: false}
-]
+const todos = [{ id: 1, title: 'sometitlw', completed: false }];
 
-export const reducer = async (state, action) => {
+export const reducer = async (_state, action) => {
+  let state = _state;
   switch (action.type) {
     case 'all':
-      state = todos
+      state = todos;
       break;
 
     case 'add':
@@ -25,29 +23,29 @@ export const reducer = async (state, action) => {
       break;
 
     case 'update':
-      state = state.map(todo => todo.id === action.value.id ? action.value : todo);
+      state = state.map((todo) => (todo.id === action.value.id ? action.value : todo));
       break;
 
     case 'delete':
-      state = state.filter(todo => todo.id !== action.value);
+      state = state.filter((todo) => todo.id !== action.value);
       break;
 
     case 'toggleCompletion':
-      state = state.map(todo =>
-        todo.id === action.value ? { ...todo, completed: !todo.completed } : todo
-      )
+      state = state.map((todo) => (todo.id === action.value
+        ? { ...todo, completed: !todo.completed }
+        : todo));
       break;
 
     case 'toggleAll':
-      state = state.map(todo => ({ ...todo, completed: !action.value }))
+      state = state.map((todo) => ({ ...todo, completed: !action.value }));
       break;
 
     case 'clearCompleted':
-      state = state.filter(todo => !todo.completed);
+      state = state.filter((todo) => !todo.completed);
       break;
 
     default:
       break;
   }
   return state;
-}
+};
