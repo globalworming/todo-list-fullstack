@@ -22,7 +22,7 @@ public class ServletApplication {
         Server server = new Server(port);
 
         ServletContextHandler servletHandler = new ServletContextHandler(NO_SESSIONS);
-        servletHandler.addFilter(CorsFilter.class, "/", EnumSet.of(DispatcherType.REQUEST, DispatcherType.FORWARD));
+        servletHandler.addFilter(AllowAllCorsFilter.class, "/", EnumSet.of(DispatcherType.REQUEST, DispatcherType.FORWARD));
         servletHandler.addServlet(HelloWorld.class, "/");
         server.setHandler(servletHandler);
 
