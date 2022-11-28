@@ -23,7 +23,7 @@ resource "google_cloudbuild_trigger" "pr" {
     name  = var.repo_name
     pull_request {
       branch       = "^main$"
-      invert_regex = true
+      comment_control = "COMMENTS_ENABLED"
     }
   }
   filename = "${var.service_name}/.google/cloudbuild-pr.yaml"
