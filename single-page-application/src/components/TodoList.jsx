@@ -1,20 +1,20 @@
-import React, { useState } from "react";
-import { NavLink } from "react-router-dom";
-import { v4 as uuid } from "uuid";
+import React, { useState } from 'react';
+import { NavLink } from 'react-router-dom';
+import { v4 as uuid } from 'uuid';
 
-import TodoItem from "./TodoItem";
-import { reducer, useAsyncReducer } from "../state";
+import TodoItem from './TodoItem';
+import { reducer, useAsyncReducer } from '../state';
 
 export default function TodoList({ match }) {
   const [todos, dispatch] = useAsyncReducer(reducer, []);
-  const [newTodo, setNewTodo] = useState("");
+  const [newTodo, setNewTodo] = useState('');
 
   const onNewValue = (event) => {
     setNewTodo(event.target.value);
   };
 
   const onAddTodo = async (event) => {
-    if (event.key === "Enter") {
+    if (event.key === 'Enter') {
       event.preventDefault();
 
       const title = event.target.value.trim();
@@ -23,12 +23,12 @@ export default function TodoList({ match }) {
         const todo = {
           id: uuid(),
           title,
-          completed: false
+          completed: false,
         };
-        await dispatch({ type: "add", value: todo });
+        await dispatch({ type: 'add', value: todo });
       }
 
-      setNewTodo("");
+      setNewTodo('');
     }
   };
 
@@ -36,36 +36,36 @@ export default function TodoList({ match }) {
     const { type, id, todo } = event.detail;
 
     switch (type) {
-    case "toggleCompletion":
-      await dispatch({ type: "toggleCompletion", value: id });
-      break;
+      case 'toggleCompletion':
+        await dispatch({ type: 'toggleCompletion', value: id });
+        break;
 
-    case "update":
-      await dispatch({ type: "update", value: todo });
-      break;
+      case 'update':
+        await dispatch({ type: 'update', value: todo });
+        break;
 
-    case "delete":
-      await dispatch({ type: "delete", value: id });
-      break;
+      case 'delete':
+        await dispatch({ type: 'delete', value: id });
+        break;
 
-    default:
-      break;
+      default:
+        break;
     }
   };
 
   const onClearCompleted = async () => {
-    await dispatch({ type: "clearCompleted" });
+    await dispatch({ type: 'clearCompleted' });
   };
-
-  const onToggleAll = async () => {
-    await dispatch({ type: "toggleAll", value: allCompleted });
-  };
-
   const visibleTodos = match.params.filter
-    ? todos.filter((todo) => (match.params.filter === "active" ? !todo.completed : todo.completed))
+    ? todos.filter((todo) => (match.params.filter === 'active' ? !todo.completed : todo.completed))
     : todos ?? [];
 
   const allCompleted = visibleTodos.every((todo) => todo.completed);
+
+  const onToggleAll = async () => {
+    await dispatch({ type: 'toggleAll', value: allCompleted });
+  };
+
   const anyCompleted = todos?.some((todo) => todo.completed);
   const left = todos?.reduce((acc, curr) => acc + (curr.completed ? 0 : 1), 0);
 
@@ -105,9 +105,9 @@ export default function TodoList({ match }) {
         <footer className="footer">
           <span className="todo-count">
             <strong>{left}</strong>
-            {" "}
-            {left === 1 ? "item" : "items"}
-            {" "}
+            {' '}
+            {left === 1 ? 'item' : 'items'}
+            {' '}
             left
           </span>
           <ul className="filters">

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-export default function TodoItem({ todo, onUpdate }) {
+function TodoItem({ todo, onUpdate }) {
   const [editing, setEditing] = useState(false);
   const [modifiedTodo, setModifiedTodo] = useState(todo);
 
@@ -14,6 +14,20 @@ export default function TodoItem({ todo, onUpdate }) {
 
   const onNewValue = (event) => {
     setModifiedTodo({ ...modifiedTodo, title: event.target.value });
+  };
+
+  const handleTitleUpdate = () => {
+    const trimmedTitle = modifiedTodo.title.trim();
+    if (trimmedTitle.length > 0) {
+      onUpdate({
+        detail: {
+          type: 'update',
+          todo: { ...modifiedTodo, title: trimmedTitle },
+        },
+      });
+    } else {
+      onDelete();
+    }
   };
 
   const onKeyDown = (event) => {
@@ -38,18 +52,6 @@ export default function TodoItem({ todo, onUpdate }) {
     setEditing(false);
   };
 
-  const handleTitleUpdate = () => {
-    const trimmedTitle = modifiedTodo.title.trim();
-    trimmedTitle.length > 0
-      ? onUpdate({
-        detail: {
-          type: 'update',
-          todo: { ...modifiedTodo, title: trimmedTitle },
-        },
-      })
-      : onDelete();
-  };
-
   // Set to editing on double click
   const handleViewClick = (event) => {
     switch (event.detail) {
@@ -63,6 +65,8 @@ export default function TodoItem({ todo, onUpdate }) {
   };
 
   return (
+    /* eslint-disable-next-line jsx-a11y/click-events-have-key-events,
+      jsx-a11y/no-noninteractive-element-interactions */
     <li
       onClick={handleViewClick}
       className={`${editing ? 'editing' : ''} ${
@@ -76,8 +80,10 @@ export default function TodoItem({ todo, onUpdate }) {
           checked={todo.completed}
           onChange={onCompletion}
         />
+        {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
         <label>{todo.title}</label>
-        <button className="destroy" onClick={onDelete} />
+        {/* eslint-disable-next-line jsx-a11y/control-has-associated-label */}
+        <button type="button" className="destroy" onClick={onDelete} />
       </div>
       {editing && (
         <input
@@ -91,3 +97,5 @@ export default function TodoItem({ todo, onUpdate }) {
     </li>
   );
 }
+
+export default TodoItem;
