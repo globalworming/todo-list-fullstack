@@ -17,6 +17,7 @@ steps:
     dir: single-page-application
     entrypoint: npm
     args:
+      - CI=true
       - run
       - test
   - id: build
