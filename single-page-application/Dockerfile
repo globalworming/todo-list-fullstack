@@ -20,8 +20,6 @@ COPY --from=build /app/build ./build
 COPY --from=build /app/public ./public
 COPY --from=dependencies /app/package.json ./package.json
 COPY --from=dependencies /app/package-lock.json ./package-lock.json
-
 RUN npm install -g serve
-EXPOSE 3000
 
-CMD serve -s ./build -l 3000
+CMD serve -s -n ./build -l $PORT
