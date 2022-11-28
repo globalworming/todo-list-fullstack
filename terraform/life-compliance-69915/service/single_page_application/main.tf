@@ -39,15 +39,15 @@ resource "google_cloud_run_service" "single_page_application" {
   template {
     spec {
       containers {
-        image = "gcr.io/cloudrun/hello"
+        image = "europe-west1-docker.pkg.dev/life-compliance-69915/docker/single-page-application:dev"
       }
     }
-  }
 
-  metadata {
-    annotations = {
-      "autoscaling.knative.dev/minScale" = "0"
-      "autoscaling.knative.dev/maxScale" = "1"
+    metadata {
+      annotations = {
+        "autoscaling.knative.dev/minScale" = "0"
+        "autoscaling.knative.dev/maxScale" = "1"
+      }
     }
   }
 }
