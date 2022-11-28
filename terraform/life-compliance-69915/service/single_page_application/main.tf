@@ -3,9 +3,9 @@ locals {
 }
 
 resource "google_cloudbuild_trigger" "deploy" {
-  name    = "${local.service_name}-deploy"
+  name           = "${local.service_name}-deploy"
   included_files = ["${local.service_name}/**"]
-  ignored_files = []
+  ignored_files  = []
   github {
     owner = var.repo_owner
     name  = var.repo_name
@@ -13,23 +13,23 @@ resource "google_cloudbuild_trigger" "deploy" {
       branch = "^main$"
     }
   }
-  filename   = "${local.service_name}/.google/cloudbuild.yaml"
+  filename = "${local.service_name}/.google/cloudbuild.yaml"
 }
 
 # Create cloud build trigger & Push service to git hub
 resource "google_cloudbuild_trigger" "pr" {
-  name    = "${local.service_name}-pr"
+  name           = "${local.service_name}-pr"
   included_files = ["${local.service_name}/**"]
-  ignored_files = []
+  ignored_files  = []
   github {
     owner = var.repo_owner
     name  = var.repo_name
     pull_request {
-      branch = "^main$"
+      branch       = "^main$"
       invert_regex = true
     }
   }
-  filename   = "${local.service_name}/.google/cloudbuild-pr.yaml"
+  filename = "${local.service_name}/.google/cloudbuild-pr.yaml"
 }
 
 resource "google_cloud_run_service" "single_page_application" {
@@ -39,6 +39,11 @@ resource "google_cloud_run_service" "single_page_application" {
   template {
     spec {
       containers {
+        resources {
+          limits = {
+            memory = "128Mi"
+          }
+        }
         image = "europe-west1-docker.pkg.dev/life-compliance-69915/docker/single-page-application:dev"
       }
     }
@@ -54,7 +59,7 @@ resource "google_cloud_run_service" "single_page_application" {
 
 data "google_iam_policy" "noauth" {
   binding {
-    role = "roles/run.invoker"
+    role    = "roles/run.invoker"
     members = [
       "allUsers",
     ]
@@ -62,9 +67,9 @@ data "google_iam_policy" "noauth" {
 }
 
 resource "google_cloud_run_service_iam_policy" "noauth" {
-  location    = google_cloud_run_service.single_page_application.location
-  project     = google_cloud_run_service.single_page_application.project
-  service     = google_cloud_run_service.single_page_application.name
+  location = google_cloud_run_service.single_page_application.location
+  project  = google_cloud_run_service.single_page_application.project
+  service  = google_cloud_run_service.single_page_application.name
 
   policy_data = data.google_iam_policy.noauth.policy_data
 }
