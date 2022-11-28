@@ -1,0 +1,30 @@
+plugins {
+    id "java"
+    id "application"
+    id "com.github.johnrengelman.shadow" version "7.1.2"
+    id 'com.google.cloud.tools.jib' version '3.3.1'
+}
+
+mainClassName = 'com.headissue.compliance.ServletApplication'
+group 'com.headissue.compliance'
+version '1.0-SNAPSHOT'
+
+ext {
+    jettyVersion = '11.0.12'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation "org.eclipse.jetty:jetty-server:${jettyVersion}"
+    implementation "org.eclipse.jetty:jetty-servlet:${jettyVersion}"
+}
+
+jib {
+    to {
+        image = 'gcr.io/PROJECT_ID/bff'
+        credHelper = 'gcr'
+    }
+}
