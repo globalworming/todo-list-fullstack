@@ -22,4 +22,4 @@ COPY --from=dependencies /app/package.json ./package.json
 COPY --from=dependencies /app/package-lock.json ./package-lock.json
 RUN npm install -g serve
 
-CMD serve -s -n ./build -l $PORT
+CMD serve -s -n ./build -l 8080
