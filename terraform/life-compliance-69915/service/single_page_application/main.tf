@@ -2,34 +2,12 @@ locals {
   service_name = "single-page-application"
 }
 
-resource "google_cloudbuild_trigger" "deploy" {
-  name           = "${local.service_name}-deploy"
-  included_files = ["${local.service_name}/**"]
-  ignored_files  = []
-  github {
-    owner = var.repo_owner
-    name  = var.repo_name
-    push {
-      branch = "^main$"
-    }
-  }
-  filename = "${local.service_name}/.google/cloudbuild.yaml"
-}
-
-# Create cloud build trigger & Push service to git hub
-resource "google_cloudbuild_trigger" "pr" {
-  name           = "${local.service_name}-pr"
-  included_files = ["${local.service_name}/**"]
-  ignored_files  = []
-  github {
-    owner = var.repo_owner
-    name  = var.repo_name
-    pull_request {
-      branch       = "^main$"
-      invert_regex = true
-    }
-  }
-  filename = "${local.service_name}/.google/cloudbuild-pr.yaml"
+module "build_triggers" {
+  source = "../../module/build_trigger"
+  location = var.location
+  repo_name = var.repo_name
+  repo_owner = var.repo_owner
+  service_name = local.service_name
 }
 
 resource "google_cloud_run_service" "single_page_application" {
