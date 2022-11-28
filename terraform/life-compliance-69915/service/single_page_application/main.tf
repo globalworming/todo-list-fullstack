@@ -35,6 +35,7 @@ resource "google_cloudbuild_trigger" "pr" {
 resource "google_cloud_run_service" "single_page_application" {
   name     = local.service_name
   location = var.location
+  autogenerate_revision_name = true
 
   template {
     spec {
