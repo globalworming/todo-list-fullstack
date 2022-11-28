@@ -15,7 +15,6 @@ public class ServletApplication {
         String portEnvVar = System.getenv().get("PORT");
         int port = 8080;
         if (portEnvVar != null && !portEnvVar.equals("")) {
-            //Assume that the port is correctly set
             port = Integer.parseInt(portEnvVar);
         }
 
