@@ -1,5 +1,5 @@
 locals {
-  service_name = "single-page-application"
+  service_name = "bff"
 }
 
 resource "google_cloudbuild_trigger" "deploy" {
@@ -32,7 +32,7 @@ resource "google_cloudbuild_trigger" "pr" {
   filename = "${local.service_name}/.google/cloudbuild-pr.yaml"
 }
 
-resource "google_cloud_run_service" "single_page_application" {
+resource "google_cloud_run_service" "bff" {
   name     = local.service_name
   location = var.location
 
@@ -41,7 +41,7 @@ resource "google_cloud_run_service" "single_page_application" {
       containers {
         resources {
           limits = {
-            memory = "128Mi"
+            memory = "512Mi"
           }
         }
         image = "europe-west1-docker.pkg.dev/life-compliance-69915/docker/${local.service_name}:dev"
@@ -67,9 +67,9 @@ data "google_iam_policy" "noauth" {
 }
 
 resource "google_cloud_run_service_iam_policy" "noauth" {
-  location = google_cloud_run_service.single_page_application.location
-  project  = google_cloud_run_service.single_page_application.project
-  service  = google_cloud_run_service.single_page_application.name
+  location = google_cloud_run_service.bff.location
+  project  = google_cloud_run_service.bff.project
+  service  = google_cloud_run_service.bff.name
 
   policy_data = data.google_iam_policy.noauth.policy_data
 }
