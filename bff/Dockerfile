@@ -1,6 +1,9 @@
 FROM gradle:7.2.0-jdk17-alpine as gradle
-COPY --chown=gradle . /home/app
+COPY --chown=gradle bff /home/app
+COPY --chown=gradle grpc /home/grpc
 WORKDIR /home/app
+# https://github.com/google/protobuf-gradle-plugin/issues/265
+RUN apk add gcompat
 RUN gradle assemble --no-daemon
 
 
