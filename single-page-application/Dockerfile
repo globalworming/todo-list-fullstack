@@ -11,6 +11,7 @@ COPY --from=dependencies /app/package.json ./package.json
 COPY --from=dependencies /app/package-lock.json ./package-lock.json
 COPY ./src ./src
 COPY ./public ./public
+COPY ./.env ./.env
 RUN npm run build
 
 # Production image, copy all the files and run next
