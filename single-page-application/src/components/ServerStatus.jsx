@@ -1,36 +1,50 @@
 import React, { useEffect, useState } from 'react';
 
 function ServerStatus({ url }) {
-  const [connected, setConnected] = useState(undefined);
+  const [init, setInit] = useState(false);
+  const [connected, setConnected] = useState([]);
 
   useEffect(() => {
     function fetchHealth() {
       fetch(url)
         .then((res) => {
-          if (res.status === 200) {
-            setConnected(true);
+          if (res.status !== 200) {
+            throw new Error('expecting status 200');
           } else {
-            setConnected(false);
+            return res.json();
           }
         })
-        .catch(() => {
-          setConnected(false);
+        .then((data) => {
+          setConnected(data.services);
+          setInit(true);
+        }).catch(() => {
+          setConnected([]);
+          setInit(true);
         });
     }
     fetchHealth();
     const interval = setInterval(() => fetchHealth(), (10000));
     return () => clearInterval(interval);
-  });
+  }, [connected.length]);
 
-  if (connected === undefined) {
+  if (!init) {
     return <span role="status">-</span>;
   }
-  if (connected) {
-    return <span role="status">ok</span>;
+  if (connected.length > 0) {
+    const services = connected.map((service) => (
+      <p key={service.name}>
+        {service.name}
+        {' '}
+        {service.serving ? 'ok' : 'error'}
+      </p>
+    ));
+    return (
+      <span role="status">{services}</span>
+    );
   }
   return (
     <span role="status">
-      error
+      disconnected
     </span>
   );
 }
