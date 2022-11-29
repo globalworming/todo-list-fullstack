@@ -48,6 +48,7 @@ module "bff" {
   depends_on = [module.todo-service]
   repo_name  = var.repo_name
   repo_owner = var.repo_owner
+  todo_service_host = module.todo-service.service_url
 }
 module "todo-service" {
   source     = "./service/todo-service"

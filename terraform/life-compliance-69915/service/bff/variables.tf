@@ -16,3 +16,7 @@ variable "repo_owner" {
 variable "repo_name" {
   type = string
 }
+
+variable "todo_service_host" {
+  type = string
+}

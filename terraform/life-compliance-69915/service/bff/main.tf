@@ -24,6 +24,10 @@ resource "google_cloud_run_service" "service" {
           }
         }
         image = "europe-west1-docker.pkg.dev/life-compliance-69915/docker/${local.service_name}:dev"
+        env {
+          name = "TODO_SERVICE_HOST"
+          value = var.todo_service_host
+        }
       }
     }
 
