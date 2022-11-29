@@ -5,7 +5,6 @@ import com.headissue.compliance.component.ChannelFactory;
 import grpc.health.v1.HealthGrpc;
 import grpc.health.v1.Todo;
 import io.grpc.ManagedChannel;
-import io.grpc.ManagedChannelBuilder;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -38,6 +37,6 @@ public class Health extends HttpServlet {
         toDoServiceHealth.add("serving", new JsonPrimitive(toDoServiceServing));
         servicesHealth.get("services").getAsJsonArray().add(bffServiceHealth);
         servicesHealth.get("services").getAsJsonArray().add(toDoServiceHealth);
-        response.getWriter().println(bffServiceHealth);
+        response.getWriter().println(servicesHealth);
     }
 }

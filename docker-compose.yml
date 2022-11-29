@@ -1,0 +1,18 @@
+version: "3.9"
+services:
+  bff:
+    container_name: bff
+    build:
+      context: .
+      dockerfile: bff/Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      TODO_SERVICE_HOST: localhost:8081
+  todo-service:
+    container_name: todo-service
+    build:
+      context: .
+      dockerfile: todo-service/Dockerfile
+    environment:
+      PORT: 8081

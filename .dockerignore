@@ -1,8 +1,4 @@
 # Ignore everything
-**
-
-# Allow files and folders with a pattern starting with !
-!todo-service
-!bff
-!single-page-application
-!grpc
+**/node_modules
+**/.gradle
+**/build
