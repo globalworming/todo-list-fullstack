@@ -1,0 +1,54 @@
+openapi: 3.0.3
+info:
+  title: Life Compliance - OpenAPI 3.0
+  description: |-
+    OpenAPI 3.0 specification
+  version: 1.0-SNAPSHOT
+externalDocs:
+  description: Github
+  url: https://github.com/globalworming/todo-list-fullstack
+servers:
+  - url: http://localhost:8080
+  - url: https://bff-pj7dyotmoa-ew.a.run.app
+tags:
+  - name: health
+    description: check backend health, gRPC mesh implements health service
+    externalDocs:
+      description: see health service definition
+      url: https://github.com/grpc/grpc-java/blob/master/services/src/main/proto/grpc/health/v1/health.proto
+paths:
+  /health:
+    get:
+      tags:
+        - health
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServicesHealth'
+
+components:
+  schemas:
+    ServicesHealth:
+      required:
+        - services
+      type: object
+      properties:
+        services:
+          type: array
+          items:
+            $ref: '#/components/schemas/ServiceHealth'
+    ServiceHealth:
+      required:
+        - name
+        - serving
+      type: object
+      properties:
+        name:
+          type: string
+          example: todo-service
+        serving:
+          type: boolean
+          example: true

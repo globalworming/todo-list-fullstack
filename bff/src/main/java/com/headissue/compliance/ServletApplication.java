@@ -21,8 +21,9 @@ public class ServletApplication {
         Server server = new Server(port);
 
         ServletContextHandler servletHandler = new ServletContextHandler(NO_SESSIONS);
-        servletHandler.addFilter(AllowAllCorsFilter.class, "/", EnumSet.of(DispatcherType.REQUEST, DispatcherType.FORWARD));
-        servletHandler.addServlet(HelloWorld.class, "/");
+        servletHandler.addFilter(AllowAllCorsFilter.class, "/*", EnumSet.of(DispatcherType.REQUEST, DispatcherType.FORWARD));
+        servletHandler.addServlet(Health.class, "/health");
+        servletHandler.addServlet(OpenApiSchema.class, "/openapi.yaml");
         server.setHandler(servletHandler);
 
         try {

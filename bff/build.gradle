@@ -20,6 +20,7 @@ repositories {
 dependencies {
     implementation "org.eclipse.jetty:jetty-server:${jettyVersion}"
     implementation "org.eclipse.jetty:jetty-servlet:${jettyVersion}"
+    implementation 'com.google.code.gson:gson:2.7'
 }
 
 jib {
