@@ -14,7 +14,7 @@ steps:
       - -t
       - $_IMAGE_NAME:dev
       - -f
-      - $_SERVICE_NAME/DOCKERFILE
+      - $_SERVICE_NAME/Dockerfile
       - .
 
   - id: push
