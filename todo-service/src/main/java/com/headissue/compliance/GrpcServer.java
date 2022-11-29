@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit;
 public class GrpcServer {
     public static void main(String[] args) throws IOException, InterruptedException {
         String portEnvVar = System.getenv().get("PORT");
-        int port = 8080;
+        int port = 8081;
         if (portEnvVar != null && !portEnvVar.equals("")) {
             port = Integer.parseInt(portEnvVar);
         }

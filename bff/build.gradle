@@ -1,6 +1,7 @@
 plugins {
     id "java"
     id "application"
+    id 'com.google.protobuf' version '0.8.18'
     id "com.github.johnrengelman.shadow" version "7.1.2"
     id 'com.google.cloud.tools.jib' version '3.3.1'
 }
@@ -11,6 +12,7 @@ version '1.0-SNAPSHOT'
 
 ext {
     jettyVersion = '11.0.12'
+    grpcVersion = '1.51.0'
 }
 
 repositories {
@@ -18,9 +20,52 @@ repositories {
 }
 
 dependencies {
+    // server and servlets
     implementation "org.eclipse.jetty:jetty-server:${jettyVersion}"
     implementation "org.eclipse.jetty:jetty-servlet:${jettyVersion}"
-    implementation 'com.google.code.gson:gson:2.7'
+
+    // write to and parse from json
+    implementation 'com.google.code.gson:gson:2.10'
+
+    // grpc
+    implementation "io.grpc:grpc-protobuf:${grpcVersion}"
+    implementation "io.grpc:grpc-stub:${grpcVersion}"
+    compileOnly 'org.apache.tomcat:annotations-api:6.0.53'
+    runtimeOnly "io.grpc:grpc-netty-shaded:${grpcVersion}"
+}
+
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src/main/java', 'build/generated/source/proto/main/java', 'build/generated/source/proto/main/grpc']
+        }
+        proto {
+            srcDirs = ['../grpc']
+        }
+    }
+
+    test {
+        java {
+            srcDirs = ['src/test/java']
+        }
+    }
+}
+
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:3.21.7"
+    }
+    plugins {
+        grpc {
+            artifact = 'io.grpc:protoc-gen-grpc-java:1.51.0'
+        }
+    }
+    generateProtoTasks {
+        all()*.plugins {
+            grpc {}
+        }
+    }
 }
 
 jib {

@@ -10,8 +10,6 @@ import static org.eclipse.jetty.servlet.ServletContextHandler.NO_SESSIONS;
 
 public class ServletApplication {
     public static void main(String[] args) {
-
-
         String portEnvVar = System.getenv().get("PORT");
         int port = 8080;
         if (portEnvVar != null && !portEnvVar.equals("")) {
@@ -25,7 +23,6 @@ public class ServletApplication {
         servletHandler.addServlet(Health.class, "/health");
         servletHandler.addServlet(OpenApiSchema.class, "/openapi.yaml");
         server.setHandler(servletHandler);
-
         try {
             server.start();
             server.join();
