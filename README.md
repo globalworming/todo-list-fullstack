@@ -12,7 +12,7 @@ C4Context
         Boundary(b1, "accessible systems") {
             Container(SPA, "Single Page Application", "React", "manage your acount and todos")
             Container(BFF, "Backend for Frontend", "java servlet api"," REST API")
-            Boundary(b2, "Life Complience System") {
+            Boundary(b2, "gRPC service mesh") {
                 Container(AUTH, "Auth Service", "java servlet api","answers questions regarding authentication")
                 Container(TODO, "Todo Service", "java servlet api","manage todo lists")
                 Container(USER, "Users Service", "java servlet api"," for managing user accounts")
