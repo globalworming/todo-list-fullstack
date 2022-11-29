@@ -4,8 +4,8 @@ variable "location" {
 
 variable "env_vars" {
   type = list(object({
-    key = string
-    value  = string
+    key   = string
+    value = string
   }))
 }
 

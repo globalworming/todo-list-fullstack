@@ -34,18 +34,26 @@ resource "google_artifact_registry_repository" "docker" {
 }
 
 module "single_page_application" {
-  source = "./service/single_page_application"
-  location = var.location
-  env_vars = []
+  source     = "./service/single_page_application"
+  location   = var.location
+  env_vars   = []
   depends_on = []
-  repo_name = var.repo_name
+  repo_name  = var.repo_name
   repo_owner = var.repo_owner
 }
 module "bff" {
-  source = "./service/bff"
-  location = var.location
-  env_vars = []
+  source     = "./service/bff"
+  location   = var.location
+  env_vars   = []
+  depends_on = [module.todo-service]
+  repo_name  = var.repo_name
+  repo_owner = var.repo_owner
+}
+module "todo-service" {
+  source     = "./service/todo-service"
+  location   = var.location
+  env_vars   = []
   depends_on = []
-  repo_name = var.repo_name
+  repo_name  = var.repo_name
   repo_owner = var.repo_owner
 }

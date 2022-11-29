@@ -37,10 +37,7 @@ public class GrpcServer {
                 server.shutdownNow();
             }
         }));
-        // This would normally be tied to the service's dependencies. For example, if HostnameGreeter
-        // used a Channel to contact a required service, then when 'channel.getState() ==
-        // TRANSIENT_FAILURE' we'd want to set NOT_SERVING. But HostnameGreeter has no dependencies, so
-        // hard-coding SERVING is appropriate.
+        // if there are dependencies, check them
         health.setStatus(HealthStatusManager.SERVICE_NAME_ALL_SERVICES, HealthCheckResponse.ServingStatus.SERVING);
         server.awaitTermination();
     }
