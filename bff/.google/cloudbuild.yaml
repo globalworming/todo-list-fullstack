@@ -9,11 +9,12 @@ substitutions:
 steps:
   - id: build
     name: gcr.io/cloud-builders/docker
-    dir: $_SERVICE_NAME
     args:
       - build
       - -t
       - $_IMAGE_NAME:dev
+      - -f
+      - $_SERVICE_NAME/DOCKERFILE
       - .
 
   - id: push
