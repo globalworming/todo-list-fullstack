@@ -1,0 +1,37 @@
+options:
+  dynamic_substitutions: true
+
+substitutions:
+  _IMAGE_NAME: europe-west1-docker.pkg.dev/${PROJECT_ID}/docker/todo-service
+  _SERVICE_NAME: todo-service
+
+
+steps:
+  - id: build
+    name: gcr.io/cloud-builders/docker
+    dir: $_SERVICE_NAME
+    args:
+      - build
+      - -t
+      - $_IMAGE_NAME:dev
+      - .
+
+  - id: push
+    name: gcr.io/cloud-builders/docker
+    args:
+      - push
+      - $_IMAGE_NAME
+      - --all-tags
+
+  - id: deploy
+    name: gcr.io/cloud-builders/gcloud
+    entrypoint: gcloud
+    args:
+      - run
+      - services
+      - update
+      - $_SERVICE_NAME
+      - --image
+      - $_IMAGE_NAME:dev
+      - --region
+      - europe-west1

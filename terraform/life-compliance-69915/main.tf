@@ -37,7 +37,7 @@ module "single_page_application" {
   source     = "./service/single_page_application"
   location   = var.location
   env_vars   = []
-  depends_on = []
+  depends_on = [module.bff]
   repo_name  = var.repo_name
   repo_owner = var.repo_owner
 }
