@@ -34,11 +34,12 @@ Rel(USER, DB, "client library")
 UpdateLayoutConfig($c4ShapeInRow="2", $c4BoundaryInRow="2")    
 ```
 
-## init
+## get your own instance:
+* fork this repository
 * create GCP project, enable billing
 * install gcloud and terraform
 * login  `gcloud auth application-default login`
-* create billing budget `gcloud alpha billing budgets create --billing-account=$your_billling_account --display-name="budget" --budget-amount=5.00EUR --threshold-rule=percent=0.70 --threshold-rule=percent=0.90,basis=forecasted-spend`
+* create billing budget `gcloud alpha billing budgets create --billing-account=$your_billling_account --display-name="budget" --budget-amount=5.00EUR --threshold-rule=percent=0.70 --threshold-rule=percent=0.90,basis=forecasted-spend` this will notify you if for some reason you spend 
 * go to `/terraform/production` and create a `terraform.tfvars` file, replace values with yours: 
 ``` 
 location = "europe-west1"

@@ -71,6 +71,7 @@ module "single_page_application" {
   depends_on = [module.bff, module.single_page_application_build_trigger]
   repo_name  = var.repo_name
   repo_owner = var.repo_owner
+  project_id = var.project_id
 }
 module "bff" {
   source            = "./service/bff"
@@ -80,6 +81,7 @@ module "bff" {
   repo_name         = var.repo_name
   repo_owner        = var.repo_owner
   todo_service_host = module.todo-service.service_url
+  project_id = var.project_id
 }
 module "todo-service" {
   source     = "./service/todo-service"
@@ -88,6 +90,7 @@ module "todo-service" {
   depends_on = [module.todo-service_build_trigger]
   repo_name  = var.repo_name
   repo_owner = var.repo_owner
+  project_id = var.project_id
 }
 ### END services
 

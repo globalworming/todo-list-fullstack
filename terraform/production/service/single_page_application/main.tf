@@ -16,7 +16,7 @@ resource "google_cloud_run_service" "service" {
             memory = "128Mi"
           }
         }
-        image = "${var.location}-docker.pkg.dev/life-compliance-69915/docker/${local.service_name}:prod"
+        image = "${var.location}-docker.pkg.dev/${var.project_id}/docker/${local.service_name}:prod"
       }
     }
 
