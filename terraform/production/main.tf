@@ -27,12 +27,14 @@ resource "google_service_account_iam_member" "default-compute-account" {
 }
 ### END permissions needed to deploy from cloudbuild run
 
+# to store docker images
 resource "google_artifact_registry_repository" "docker" {
   location      = var.location
   repository_id = "docker"
   format        = "DOCKER"
 }
 
+### START services
 module "single_page_application" {
   source     = "./service/single_page_application"
   location   = var.location
@@ -57,4 +59,12 @@ module "todo-service" {
   depends_on = []
   repo_name  = var.repo_name
   repo_owner = var.repo_owner
+}
+### END services
+
+# for persistence a firestore db
+resource "google_app_engine_application" "firestore_db" {
+  project     = var.project_id
+  location_id = var.datastore_location
+  database_type = "CLOUD_DATASTORE_COMPATIBILITY"
 }

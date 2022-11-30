@@ -19,11 +19,14 @@ repositories {
 }
 
 dependencies {
+    // grpc service
     runtimeOnly "io.grpc:grpc-netty-shaded:${grpcVersion}"
     implementation "io.grpc:grpc-protobuf:${grpcVersion}"
     implementation "io.grpc:grpc-stub:${grpcVersion}"
     implementation "io.grpc:grpc-services:${grpcVersion}"
     compileOnly 'org.apache.tomcat:annotations-api:6.0.53'
+
+    implementation'com.google.cloud:google-cloud-datastore:2.12.5'
 }
 
 sourceSets {
@@ -41,6 +44,11 @@ sourceSets {
             srcDirs = ['src/test/java']
         }
     }
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_16
+    targetCompatibility = JavaVersion.VERSION_16
 }
 
 protobuf {

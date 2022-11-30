@@ -6,6 +6,7 @@ import io.grpc.health.v1.HealthCheckResponse;
 import io.grpc.protobuf.services.HealthStatusManager;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class GrpcServer {
@@ -37,8 +38,10 @@ public class GrpcServer {
                 server.shutdownNow();
             }
         }));
-        // if there are dependencies, check them
-        health.setStatus(HealthStatusManager.SERVICE_NAME_ALL_SERVICES, HealthCheckResponse.ServingStatus.SERVING);
+        Map<String, HealthCheckResponse.ServingStatus> serviceToStatus = new HealthService(new DataStoreClient()).check();
+        if (!serviceToStatus.values().stream().allMatch(s -> s.equals(HealthCheckResponse.ServingStatus.SERVING))) {
+            health.setStatus(HealthStatusManager.SERVICE_NAME_ALL_SERVICES, HealthCheckResponse.ServingStatus.NOT_SERVING);
+        }
         server.awaitTermination();
     }
 }
