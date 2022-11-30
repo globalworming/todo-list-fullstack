@@ -35,4 +35,4 @@ steps:
       - --image
       - $_IMAGE_NAME:prod
       - --region
-      - europe-west1
+      - $_LOCATION
