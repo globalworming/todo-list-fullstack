@@ -2,7 +2,7 @@ options:
   dynamic_substitutions: true
 
 substitutions:
-  _IMAGE_NAME: europe-west1-docker.pkg.dev/${PROJECT_ID}/docker/bff
+  _IMAGE_NAME: ${LOCATION}-docker.pkg.dev/${PROJECT_ID}/docker/bff
   _SERVICE_NAME: bff
 
 
@@ -12,7 +12,7 @@ steps:
     args:
       - build
       - -t
-      - $_IMAGE_NAME:dev
+      - $_IMAGE_NAME:prod
       - -f
       - $_SERVICE_NAME/Dockerfile
       - .
@@ -33,6 +33,6 @@ steps:
       - update
       - $_SERVICE_NAME
       - --image
-      - $_IMAGE_NAME:dev
+      - $_IMAGE_NAME:prod
       - --region
       - europe-west1
