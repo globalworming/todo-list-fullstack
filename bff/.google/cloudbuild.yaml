@@ -12,7 +12,7 @@ steps:
     args:
       - build
       - -t
-      - $_IMAGE_NAME:prod
+      - "${LOCATION}${_IMAGE_NAME}:prod"
       - -f
       - $_SERVICE_NAME/Dockerfile
       - .
