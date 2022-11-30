@@ -2,7 +2,7 @@ options:
   dynamic_substitutions: true
 
 substitutions:
-  _IMAGE_NAME: ${LOCATION}-docker.pkg.dev/${PROJECT_ID}/docker/bff
+  _IMAGE_NAME: ${_LOCATION}-docker.pkg.dev/${PROJECT_ID}/docker/bff
   _SERVICE_NAME: bff
 
 
@@ -12,7 +12,7 @@ steps:
     args:
       - build
       - -t
-      - "${LOCATION}${_IMAGE_NAME}:prod"
+      - $_IMAGE_NAME:prod"
       - -f
       - $_SERVICE_NAME/Dockerfile
       - .
