@@ -3,7 +3,9 @@ package com.headissue.compliance;
 import com.google.gson.*;
 import com.headissue.compliance.component.ChannelFactory;
 import grpc.health.v1.HealthGrpc;
-import grpc.health.v1.Todo;
+import grpc.health.v1.HealthGrpc.HealthBlockingStub;
+import grpc.health.v1.HealthOuterClass;
+import grpc.health.v1.HealthOuterClass.HealthCheckResponse;
 import io.grpc.ManagedChannel;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,9 +20,9 @@ public class Health extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         boolean toDoServiceServing = false;
         try {
-            HealthGrpc.HealthBlockingStub healthStub = HealthGrpc.newBlockingStub(channel);
-            Todo.HealthCheckResponse healthCheckResponse = healthStub.check(Todo.HealthCheckRequest.getDefaultInstance());
-            toDoServiceServing = healthCheckResponse.getStatus().equals(Todo.HealthCheckResponse.ServingStatus.SERVING);
+            HealthBlockingStub healthStub = HealthGrpc.newBlockingStub(channel);
+            HealthCheckResponse healthCheckResponse = healthStub.check(HealthOuterClass.HealthCheckRequest.getDefaultInstance());
+            toDoServiceServing = healthCheckResponse.getStatus().equals(HealthCheckResponse.ServingStatus.SERVING);
         } catch (Exception e) {
             // ignore
         }
