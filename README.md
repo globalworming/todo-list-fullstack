@@ -51,4 +51,4 @@ zone = "europe-west1-d"
 * run terraform init and terraform apply (might require multiple tries first time for apis to be enabled). 
 * `Error creating Trigger: googleapi: Error 400: Repository mapping does not exist. Please visit https://console.cloud.google.com/cloud-build/triggers/connect?project=... to connect a repository to your project` do that
 * some images are not present yet, so you have to run all the deployment triggers to have the image built
-* 
+* change and commit/push [.env](single-page-application/.env) to your actual bff url (go to cloud run to find it) FIXME, should be automatic
