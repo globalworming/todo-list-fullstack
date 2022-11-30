@@ -11,6 +11,10 @@ resource "google_cloudbuild_trigger" "deploy" {
     }
   }
   filename = "${var.service_name}/.google/cloudbuild.yaml"
+  substitutions = {
+    _LOCATION = var.location
+  }
+
 }
 
 # Create cloud build trigger & Push service to git hub

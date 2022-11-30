@@ -2,14 +2,6 @@ locals {
   service_name = "todo-service"
 }
 
-module "build_triggers" {
-  source       = "../../module/build_trigger"
-  location     = var.location
-  repo_name    = var.repo_name
-  repo_owner   = var.repo_owner
-  service_name = local.service_name
-}
-
 resource "google_cloud_run_service" "service" {
   name                       = local.service_name
   location                   = var.location
@@ -23,7 +15,7 @@ resource "google_cloud_run_service" "service" {
             memory = "512Mi"
           }
         }
-        image = "europe-west1-docker.pkg.dev/life-compliance-69915/docker/${local.service_name}:dev"
+        image = "${var.location}-docker.pkg.dev/life-compliance-69915/docker/${local.service_name}:prod"
       }
     }
 
