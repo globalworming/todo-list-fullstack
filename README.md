@@ -39,6 +39,15 @@ UpdateLayoutConfig($c4ShapeInRow="2", $c4BoundaryInRow="2")
 * install gcloud and terraform
 * login  `gcloud auth application-default login`
 * create billing budget `gcloud alpha billing budgets create --billing-account=$your_billling_account --display-name="budget" --budget-amount=5.00EUR --threshold-rule=percent=0.70 --threshold-rule=percent=0.90,basis=forecasted-spend`
+* go to `/terraform/production` and create a `terraform.tfvars` file, replace values with yours: 
+``` 
+location = "europe-west1"
+project_id= ${gcp_project_id}
+project_number = ${gcp_project_number}
+repo_name = "todo-list-fullstack"
+repo_owner = ${gihub_username}
+zone = "europe-west1-d" 
+```
 * run terraform init and terraform apply (might require multiple tries first time for apis to be enabled). 
 * `Error creating Trigger: googleapi: Error 400: Repository mapping does not exist. Please visit https://console.cloud.google.com/cloud-build/triggers/connect?project=... to connect a repository to your project` do that
 * some images are not present yet so you have to run all the deploy triggers to have the image built

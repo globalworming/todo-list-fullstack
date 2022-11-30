@@ -1,11 +1,3 @@
-variable "alerting_email_to" {
-  type = string
-}
-
-variable "billing_account_number" {
-  type = string
-}
-
 variable "location" {
   type = string
 }
