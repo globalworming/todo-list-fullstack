@@ -43,7 +43,6 @@ UpdateLayoutConfig($c4ShapeInRow="2", $c4BoundaryInRow="2")
 ``` 
 location = "europe-west1"
 project_id= ${gcp_project_id}
-project_number = ${gcp_project_number}
 repo_name = "todo-list-fullstack"
 repo_owner = ${gihub_username}
 zone = "europe-west1-d" 

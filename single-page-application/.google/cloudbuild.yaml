@@ -2,7 +2,7 @@ options:
   dynamic_substitutions: true
 
 substitutions:
-  _IMAGE_NAME: ${LOCATION}-docker.pkg.dev/${PROJECT_ID}/docker/single-page-application
+  _IMAGE_NAME: ${_LOCATION}-docker.pkg.dev/${PROJECT_ID}/docker/single-page-application
   _SERVICE_NAME: single-page-application
 
 steps:
