@@ -17,8 +17,8 @@ C4Context
                 Container(TODO, "Todo Service", "java servlet api","manage todo lists")
                 Container(USER, "Users Service", "java servlet api"," for managing user accounts")
             }
-            Boundary(b3, "3rd Party") {
-              SystemDb_Ext(DB, "Firestore Database", "all the data, live features")
+            Boundary(b3, "Persistence") {
+              SystemDb(DB, "Datastore", "document DB")
             }
         }
     }
@@ -50,5 +50,5 @@ zone = "europe-west1-d"
 ```
 * run terraform init and terraform apply (might require multiple tries first time for apis to be enabled). 
 * `Error creating Trigger: googleapi: Error 400: Repository mapping does not exist. Please visit https://console.cloud.google.com/cloud-build/triggers/connect?project=... to connect a repository to your project` do that
-* some images are not present yet so you have to run all the deploy triggers to have the image built
+* some images are not present yet, so you have to run all the deployment triggers to have the image built
 * 
