@@ -73,6 +73,10 @@ protobuf {
     }
 }
 
+shadowJar {
+    mergeServiceFiles()
+}
+
 jib {
     to {
         image = 'gcr.io/PROJECT_ID/bff'
