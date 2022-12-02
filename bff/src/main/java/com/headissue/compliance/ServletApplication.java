@@ -8,6 +8,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.EnumSet;
 
+import static jakarta.servlet.DispatcherType.FORWARD;
+import static jakarta.servlet.DispatcherType.REQUEST;
 import static org.eclipse.jetty.servlet.ServletContextHandler.NO_SESSIONS;
 
 public class ServletApplication {
@@ -24,7 +26,8 @@ public class ServletApplication {
         Server server = new Server(port);
 
         ServletContextHandler servletHandler = new ServletContextHandler(NO_SESSIONS);
-        servletHandler.addFilter(AllowAllCorsFilter.class, "/*", EnumSet.of(DispatcherType.REQUEST, DispatcherType.FORWARD));
+        servletHandler.addFilter(LoggingContextSettingFilter.class, "/*", EnumSet.of(REQUEST, FORWARD, DispatcherType.ERROR));
+        servletHandler.addFilter(AllowAllCorsFilter.class, "/*", EnumSet.of(REQUEST, FORWARD));
         servletHandler.addServlet(Health.class, "/health");
         servletHandler.addServlet(OpenApiSchema.class, "/openapi.yaml");
         server.setHandler(servletHandler);

@@ -1,5 +1,9 @@
 package com.headissue.compliance;
 
+import ch.qos.logback.classic.servlet.LogbackServletContainerInitializer;
+import com.google.cloud.logging.Context;
+import com.google.cloud.logging.ContextHandler;
+import com.google.cloud.logging.HttpRequest;
 import com.google.gson.*;
 import com.headissue.compliance.component.ChannelFactory;
 import grpc.health.v1.HealthGrpc;
@@ -18,7 +22,11 @@ import java.io.IOException;
 public class Health extends HttpServlet {
 
     private final ManagedChannel channel = ChannelFactory.buildChannel("TODO_SERVICE_HOST", "localhost:8081");
-    private final Logger logger = LoggerFactory.getLogger(Health.class);
+    private final Logger logger;
+
+    {
+        logger = LoggerFactory.getLogger(Health.class);
+    }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         boolean toDoServiceServing = false;
