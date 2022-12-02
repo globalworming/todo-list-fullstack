@@ -10,12 +10,15 @@ import io.grpc.ManagedChannel;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
 public class Health extends HttpServlet {
 
     private final ManagedChannel channel = ChannelFactory.buildChannel("TODO_SERVICE_HOST", "localhost:8081");
+    private final Logger logger = LoggerFactory.getLogger(Health.class);
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         boolean toDoServiceServing = false;
@@ -24,7 +27,7 @@ public class Health extends HttpServlet {
             HealthCheckResponse healthCheckResponse = healthStub.check(HealthOuterClass.HealthCheckRequest.getDefaultInstance());
             toDoServiceServing = healthCheckResponse.getStatus().equals(HealthCheckResponse.ServingStatus.SERVING);
         } catch (Exception e) {
-            // ignore
+            logger.error("todo-service", e);
         }
 
         response.setStatus(HttpServletResponse.SC_OK);

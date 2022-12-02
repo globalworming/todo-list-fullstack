@@ -3,12 +3,17 @@ package com.headissue.compliance;
 import jakarta.servlet.DispatcherType;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.EnumSet;
 
 import static org.eclipse.jetty.servlet.ServletContextHandler.NO_SESSIONS;
 
 public class ServletApplication {
+
+    private static final Logger logger = LoggerFactory.getLogger(ServletApplication.class);
+
     public static void main(String[] args) {
         String portEnvVar = System.getenv().get("PORT");
         int port = 8080;
@@ -27,6 +32,7 @@ public class ServletApplication {
             server.start();
             server.join();
         } catch (Exception ex) {
+            logger.error("startup", ex);
             System.exit(1);
         } finally {
             server.destroy();

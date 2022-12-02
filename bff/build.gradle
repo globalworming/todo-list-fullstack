@@ -32,6 +32,11 @@ dependencies {
     implementation "io.grpc:grpc-stub:${grpcVersion}"
     compileOnly 'org.apache.tomcat:annotations-api:6.0.53'
     runtimeOnly "io.grpc:grpc-netty-shaded:${grpcVersion}"
+
+    //logging
+    implementation 'ch.qos.logback:logback-classic:1.4.5'
+    implementation 'com.google.cloud:google-cloud-logging-logback:0.129.3-alpha'
+    implementation 'com.google.cloud:google-cloud-logging-servlet-initializer:0.1.7-alpha'
 }
 
 
