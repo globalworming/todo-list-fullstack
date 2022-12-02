@@ -1,6 +1,5 @@
 package com.headissue.compliance;
 
-import jakarta.servlet.DispatcherType;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.slf4j.Logger;
@@ -26,7 +25,7 @@ public class ServletApplication {
         Server server = new Server(port);
 
         ServletContextHandler servletHandler = new ServletContextHandler(NO_SESSIONS);
-        servletHandler.addFilter(LoggingContextSettingFilter.class, "/*", EnumSet.of(REQUEST, FORWARD, DispatcherType.ERROR));
+        servletHandler.addServletContainerInitializer(new LoggingContextInitializer());
         servletHandler.addFilter(AllowAllCorsFilter.class, "/*", EnumSet.of(REQUEST, FORWARD));
         servletHandler.addServlet(Health.class, "/health");
         servletHandler.addServlet(OpenApiSchema.class, "/openapi.yaml");
