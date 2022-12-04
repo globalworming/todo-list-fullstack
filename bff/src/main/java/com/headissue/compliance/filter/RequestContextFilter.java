@@ -1,4 +1,4 @@
-package com.headissue.compliance;
+package com.headissue.compliance.filter;
 
 import com.google.cloud.logging.Context;
 import com.google.cloud.logging.ContextHandler;
@@ -11,8 +11,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.io.Serial;
 
 public class RequestContextFilter extends HttpFilter {
+    @Serial
     private static final long serialVersionUID = 1517497440413815384L;
     private static final String CLOUD_TRACE_CONTEXT_HEADER = "x-cloud-trace-context";
     private static final String W3C_TRACEPARENT_HEADER = "traceparent";

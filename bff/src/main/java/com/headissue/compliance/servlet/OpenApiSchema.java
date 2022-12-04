@@ -1,10 +1,9 @@
-package com.headissue.compliance;
+package com.headissue.compliance.servlet;
 
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -12,7 +11,6 @@ import java.io.OutputStream;
 import static jakarta.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
 
 public class OpenApiSchema extends HttpServlet {
-    private final int ARBITARY_SIZE = 1048;
 
     protected void doGet(
             HttpServletRequest request,
@@ -30,6 +28,7 @@ public class OpenApiSchema extends HttpServlet {
 
             response.setHeader("Content-disposition", "attachment; filename=openapi.yaml");
 
+            int ARBITARY_SIZE = 1048;
             byte[] buffer = new byte[ARBITARY_SIZE];
 
             int numBytesRead;

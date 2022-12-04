@@ -1,13 +1,7 @@
-package com.headissue.compliance;
+package com.headissue.compliance.servlet;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 import com.headissue.compliance.todo.v1.ToDoServiceGrpc;
 import com.headissue.compliance.todo.v1.Todo;
-import grpc.health.v1.HealthGrpc.HealthBlockingStub;
-import grpc.health.v1.HealthOuterClass;
-import grpc.health.v1.HealthOuterClass.HealthCheckResponse;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

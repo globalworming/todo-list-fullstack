@@ -1,4 +1,4 @@
-package com.headissue.compliance;
+package com.headissue.compliance.filter;
 
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;

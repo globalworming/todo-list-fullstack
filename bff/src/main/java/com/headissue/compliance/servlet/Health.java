@@ -1,4 +1,4 @@
-package com.headissue.compliance;
+package com.headissue.compliance.servlet;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -35,6 +35,11 @@ public class Health extends HttpServlet {
 
         response.setStatus(HttpServletResponse.SC_OK);
         response.setContentType("application/json");
+        JsonObject servicesHealth = buildResponse(toDoServiceServing);
+        response.getWriter().println(servicesHealth);
+    }
+
+    private static JsonObject buildResponse(boolean toDoServiceServing) {
         JsonObject servicesHealth = new JsonObject();
         servicesHealth.add("services", new JsonArray());
         JsonObject bffServiceHealth = new JsonObject();
@@ -45,6 +50,6 @@ public class Health extends HttpServlet {
         toDoServiceHealth.add("serving", new JsonPrimitive(toDoServiceServing));
         servicesHealth.get("services").getAsJsonArray().add(bffServiceHealth);
         servicesHealth.get("services").getAsJsonArray().add(toDoServiceHealth);
-        response.getWriter().println(servicesHealth);
+        return servicesHealth;
     }
 }

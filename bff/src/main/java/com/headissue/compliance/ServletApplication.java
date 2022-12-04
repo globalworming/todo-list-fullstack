@@ -1,6 +1,11 @@
 package com.headissue.compliance;
 
 import com.headissue.compliance.component.ChannelFactory;
+import com.headissue.compliance.container.LoggingContextInitializer;
+import com.headissue.compliance.filter.AllowAllCorsFilter;
+import com.headissue.compliance.servlet.Health;
+import com.headissue.compliance.servlet.OpenApiSchema;
+import com.headissue.compliance.servlet.ToDoList;
 import com.headissue.compliance.todo.v1.ToDoServiceGrpc;
 import grpc.health.v1.HealthGrpc;
 import io.grpc.ManagedChannel;
