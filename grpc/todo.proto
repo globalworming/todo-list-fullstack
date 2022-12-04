@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package com.headissue.compliance.todo.v1;
+
+service ToDoService {
+  rpc WriteList(ToDoList) returns (WriteListResult);
+}
+
+message ToDoList {
+  string id = 1;
+  repeated ToDo toDos = 2;
+}
+
+message ToDo {
+  string description = 1;
+}
+
+message WriteListResult {
+
+}

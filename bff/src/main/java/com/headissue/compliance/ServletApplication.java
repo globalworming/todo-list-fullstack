@@ -1,6 +1,7 @@
 package com.headissue.compliance;
 
 import com.headissue.compliance.component.ChannelFactory;
+import com.headissue.compliance.todo.v1.ToDoServiceGrpc;
 import grpc.health.v1.HealthGrpc;
 import io.grpc.ManagedChannel;
 import org.eclipse.jetty.server.Server;
@@ -36,6 +37,9 @@ public class ServletApplication {
         HealthGrpc.HealthBlockingStub todoHealthStub = HealthGrpc.newBlockingStub(todoServiceChannel);
         ServletHolder health = new ServletHolder(new Health(todoHealthStub));
         servletHandler.addServlet(health, "/health");
+        ToDoServiceGrpc.ToDoServiceBlockingStub toDoServiceStub = ToDoServiceGrpc.newBlockingStub(todoServiceChannel);
+        ServletHolder toDoList = new ServletHolder(new ToDoList(toDoServiceStub));
+        servletHandler.addServlet(toDoList, "/toDoList");
         servletHandler.addServlet(OpenApiSchema.class, "/openapi.yaml");
         server.setHandler(servletHandler);
         try {

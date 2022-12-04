@@ -20,6 +20,7 @@ public class GrpcServer {
         HealthStatusManager health = new HealthStatusManager();
         final Server server = ServerBuilder.forPort(port)
                 .addService(health.getHealthService())
+                .addService(new ToDoService())
                 .build()
                 .start();
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {

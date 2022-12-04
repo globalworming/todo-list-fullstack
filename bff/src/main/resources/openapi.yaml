@@ -16,6 +16,8 @@ tags:
     externalDocs:
       description: see health service definition
       url: https://github.com/grpc/grpc-java/blob/master/services/src/main/proto/grpc/health/v1/health.proto
+  - name: ToDo List
+    description: manage lists
 paths:
   /health:
     get:
@@ -28,6 +30,13 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ServicesHealth'
+  /toDoList:
+    post:
+      tags:
+        - ToDo List
+      responses:
+        '200':
+          description: successful operation
 
 components:
   schemas:
