@@ -17,7 +17,5 @@ public class ToDoService extends ToDoServiceGrpc.ToDoServiceImplBase {
                 .setMessage("Not implemented yet")
                 .build();
         responseObserver.onError(StatusProto.toStatusRuntimeException(status));
-
-        super.writeList(request, responseObserver);
     }
 }
