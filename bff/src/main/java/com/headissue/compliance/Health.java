@@ -1,16 +1,12 @@
 package com.headissue.compliance;
 
-import ch.qos.logback.classic.servlet.LogbackServletContainerInitializer;
-import com.google.cloud.logging.Context;
-import com.google.cloud.logging.ContextHandler;
-import com.google.cloud.logging.HttpRequest;
-import com.google.gson.*;
-import com.headissue.compliance.component.ChannelFactory;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import grpc.health.v1.HealthGrpc;
 import grpc.health.v1.HealthGrpc.HealthBlockingStub;
 import grpc.health.v1.HealthOuterClass;
 import grpc.health.v1.HealthOuterClass.HealthCheckResponse;
-import io.grpc.ManagedChannel;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -21,18 +17,17 @@ import java.io.IOException;
 
 public class Health extends HttpServlet {
 
-    private final ManagedChannel channel = ChannelFactory.buildChannel("TODO_SERVICE_HOST", "localhost:8081");
-    private final Logger logger;
+    private final Logger logger = LoggerFactory.getLogger(Health.class);
+    private final HealthGrpc.HealthBlockingStub todoHealthStub;
 
-    {
-        logger = LoggerFactory.getLogger(Health.class);
+    public Health(HealthBlockingStub todoHealthStub) {
+        this.todoHealthStub = todoHealthStub;
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         boolean toDoServiceServing = false;
         try {
-            HealthBlockingStub healthStub = HealthGrpc.newBlockingStub(channel);
-            HealthCheckResponse healthCheckResponse = healthStub.check(HealthOuterClass.HealthCheckRequest.getDefaultInstance());
+            HealthCheckResponse healthCheckResponse = todoHealthStub.check(HealthOuterClass.HealthCheckRequest.getDefaultInstance());
             toDoServiceServing = healthCheckResponse.getStatus().equals(HealthCheckResponse.ServingStatus.SERVING);
         } catch (Exception e) {
             logger.error("todo-service", e);

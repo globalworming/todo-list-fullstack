@@ -1,7 +1,11 @@
 package com.headissue.compliance;
 
+import com.headissue.compliance.component.ChannelFactory;
+import grpc.health.v1.HealthGrpc;
+import io.grpc.ManagedChannel;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.eclipse.jetty.servlet.ServletHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,6 +19,8 @@ public class ServletApplication {
 
     private static final Logger logger = LoggerFactory.getLogger(ServletApplication.class);
 
+    private static final ManagedChannel todoServiceChannel = ChannelFactory.buildChannel("TODO_SERVICE_HOST", "localhost:8081");
+
     public static void main(String[] args) {
         String portEnvVar = System.getenv().get("PORT");
         int port = 8080;
@@ -27,7 +33,9 @@ public class ServletApplication {
         ServletContextHandler servletHandler = new ServletContextHandler(NO_SESSIONS);
         servletHandler.addServletContainerInitializer(new LoggingContextInitializer());
         servletHandler.addFilter(AllowAllCorsFilter.class, "/*", EnumSet.of(REQUEST, FORWARD));
-        servletHandler.addServlet(Health.class, "/health");
+        HealthGrpc.HealthBlockingStub todoHealthStub = HealthGrpc.newBlockingStub(todoServiceChannel);
+        ServletHolder health = new ServletHolder(new Health(todoHealthStub));
+        servletHandler.addServlet(health, "/health");
         servletHandler.addServlet(OpenApiSchema.class, "/openapi.yaml");
         server.setHandler(servletHandler);
         try {
