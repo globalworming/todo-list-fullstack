@@ -1,0 +1,13 @@
+<configuration>
+    <appender name="CLOUD" class="com.google.cloud.logging.logback.LoggingAppender">
+        <!-- Optional: filter logs at and above this level -->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+        <redirectToStdout>true</redirectToStdout>
+    </appender>
+
+    <root level="info">
+        <appender-ref ref="CLOUD" />
+    </root>
+</configuration>
