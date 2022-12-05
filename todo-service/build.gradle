@@ -27,6 +27,11 @@ dependencies {
     compileOnly 'org.apache.tomcat:annotations-api:6.0.53'
 
     implementation'com.google.cloud:google-cloud-datastore:2.12.5'
+
+    //logging
+    implementation 'ch.qos.logback:logback-classic:1.4.5'
+    implementation 'com.google.cloud:google-cloud-logging-logback:0.129.3-alpha'
+
 }
 
 sourceSets {
