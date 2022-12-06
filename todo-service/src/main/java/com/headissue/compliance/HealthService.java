@@ -8,9 +8,9 @@ import java.util.Map;
 
 public class HealthService {
 
-    private final Logger logger = LoggerFactory.getLogger(HealthService.class);
+    private static final Logger logger = LoggerFactory.getLogger(HealthService.class);
 
-    private DataStoreClient dataStoreClient;
+    private final DataStoreClient dataStoreClient;
 
     public HealthService(DataStoreClient dataStoreClient) {
         this.dataStoreClient = dataStoreClient;
