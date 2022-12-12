@@ -5,7 +5,6 @@ import io.cucumber.java.en.When;
 import net.serenitybdd.screenplay.Actor;
 import net.serenitybdd.screenplay.actions.Open;
 import net.serenitybdd.screenplay.targets.Target;
-import org.hamcrest.core.StringContains;
 
 import static net.serenitybdd.screenplay.EventualConsequence.eventually;
 import static net.serenitybdd.screenplay.GivenWhenThen.seeThat;
@@ -19,8 +18,17 @@ public class ServerStatusStepDefinitions {
     }
 
     @Then("{actor} should see that the server {string} shows status {string}")
-    public void olivianShouldSeeThatTheServerServerShowsStatusStatus(Actor actor, String server, String status) {
-        actor.should(eventually(seeThat("the status", (a) -> Target.the("status").locatedBy("body span[role=\"status\"]").resolveFor(a).getText(), containsString("%s %s".formatted(server, status)))));
+    public void seeThatTheServerShowsStatus(Actor actor, String server, String status) {
+        actor.should(
+                eventually(
+                        seeThat("the status",
+                                (a) -> Target
+                                        .the("status")
+                                        .locatedBy("body span[role=\"status\"]")
+                                        .resolveFor(a)
+                                        .getText(),
+                                containsString("%s %s".formatted(server, status))))
+                        .waitingForNoLongerThan(10).seconds());
 
     }
 

@@ -1,24 +1,13 @@
-defaultTasks 'clean', 'test', 'aggregate'
+plugins {
+    id 'java'
+    id 'idea'
+    id 'net.serenity-bdd.serenity-gradle-plugin' version '3.3.0'
+}
 
 repositories {
     mavenCentral()
 }
-
-buildscript {
-    repositories {
-        maven {
-            url "https://plugins.gradle.org/m2/"
-        }
-    }
-    dependencies {
-        classpath "net.serenity-bdd:serenity-gradle-plugin:3.3.0"
-    }
-}
-
-
-apply plugin: 'java'
-apply plugin: 'idea'
-apply plugin: "net.serenity-bdd.serenity-gradle-plugin"
+defaultTasks 'clean', 'test', 'aggregate'
 
 ext {
     slf4jVersion = '1.7.7'
