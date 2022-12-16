@@ -1,29 +1,58 @@
 package com.headissue.compliance;
 
-import com.google.cloud.datastore.Datastore;
-import com.google.cloud.datastore.DatastoreOptions;
-import com.google.cloud.datastore.Key;
-import com.google.cloud.datastore.Entity;
+import com.google.cloud.datastore.*;
+import com.headissue.compliance.todo.v1.Todo;
 
-import java.util.UUID;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DataStoreClient {
+    public static final String TO_DO_LIST_ITEM = "ToDoListItem";
+    public static final String TO_DO_LIST = "ToDoList";
     private final Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
 
+    public void createTodoList(String name, List<Todo.ToDo> toDosList) {
+        ArrayList<FullEntity<? extends IncompleteKey>> entities = new ArrayList<>();
+        FullEntity<Key> list = Entity.newBuilder(toDoListKey(name)).build();
+        entities.add(list);
+        for (Todo.ToDo toDo : toDosList) {
+            entities.add(Entity
+                    .newBuilder(datastore.newKeyFactory().setKind(TO_DO_LIST_ITEM).newKey())
+                    .set("toDoListKey", list.getKey())
+                    .set("description", toDo.getDescription())
+                    .build());
+        }
+        datastore.add(entities.toArray(new FullEntity[0]));
+    }
+
+    private Key toDoListKey(String name) {
+        return datastore.newKeyFactory().setKind(TO_DO_LIST).newKey(name);
+    }
+
     public Key createRandomDocument() {
-        String kind = "HealthTest";
-        String name = UUID.randomUUID().toString();
-        Key taskKey = datastore.newKeyFactory().setKind(kind).newKey(name);
-
-        // Prepares the new entity
-        Entity task = Entity.newBuilder(taskKey).build();
-
-        // Saves the entity
-        datastore.put(task);
-        return taskKey;
+        IncompleteKey taskKey = datastore.newKeyFactory().setKind("HealthTest").newKey();
+        FullEntity<IncompleteKey> task = Entity.newBuilder(taskKey).build();
+        return datastore.put(task).getKey();
     }
 
     public void deleteDocument(Key key) {
         datastore.delete(key);
+    }
+
+    public Todo.ToDoList queryToDoList(String id) {
+        Entity toDoList = datastore.get(toDoListKey(id));
+        Query<Entity> query =
+                Query.newEntityQueryBuilder()
+                        .setKind(TO_DO_LIST_ITEM)
+                        .setFilter(
+                                StructuredQuery.PropertyFilter.eq("toDoListKey", toDoList.getKey()))
+                        .build();
+
+        QueryResults<Entity> toDoListItems = datastore.run(query);
+        Todo.ToDoList.Builder builder = Todo.ToDoList.newBuilder().setId(toDoList.getKey().getName());
+        toDoListItems.forEachRemaining(item -> {
+            builder.addToDos(Todo.ToDo.newBuilder().setDescription(item.getString("description")).build());
+        });
+        return builder.build();
     }
 }
