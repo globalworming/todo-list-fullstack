@@ -1,14 +1,13 @@
 package com.headissue.compliance;
 
-import com.google.rpc.Code;
+import com.headissue.compliance.api.DataStoreClient;
 import com.headissue.compliance.todo.v1.ToDoServiceGrpc;
 import com.headissue.compliance.todo.v1.Todo;
-import io.grpc.protobuf.StatusProto;
 import io.grpc.stub.StreamObserver;
 
 public class ToDoService extends ToDoServiceGrpc.ToDoServiceImplBase {
 
-    private final DataStoreClient dataStore;
+    private final com.headissue.compliance.api.DataStoreClient dataStore;
 
     public ToDoService(DataStoreClient dataStore) {
         this.dataStore = dataStore;

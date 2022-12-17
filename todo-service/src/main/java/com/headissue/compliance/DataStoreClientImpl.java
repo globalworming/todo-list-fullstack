@@ -1,16 +1,18 @@
 package com.headissue.compliance;
 
 import com.google.cloud.datastore.*;
+import com.headissue.compliance.api.DataStoreClient;
 import com.headissue.compliance.todo.v1.Todo;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class DataStoreClient {
+public class DataStoreClientImpl implements DataStoreClient {
     public static final String TO_DO_LIST_ITEM = "ToDoListItem";
     public static final String TO_DO_LIST = "ToDoList";
     private final Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
 
+    @Override
     public void createTodoList(String name, List<Todo.ToDo> toDosList) {
         ArrayList<FullEntity<? extends IncompleteKey>> entities = new ArrayList<>();
         FullEntity<Key> list = Entity.newBuilder(toDoListKey(name)).build();
@@ -29,16 +31,19 @@ public class DataStoreClient {
         return datastore.newKeyFactory().setKind(TO_DO_LIST).newKey(name);
     }
 
+    @Override
     public Key createRandomDocument() {
         IncompleteKey taskKey = datastore.newKeyFactory().setKind("HealthTest").newKey();
         FullEntity<IncompleteKey> task = Entity.newBuilder(taskKey).build();
         return datastore.put(task).getKey();
     }
 
+    @Override
     public void deleteDocument(Key key) {
         datastore.delete(key);
     }
 
+    @Override
     public Todo.ToDoList queryToDoList(String id) {
         Entity toDoList = datastore.get(toDoListKey(id));
         Query<Entity> query =

@@ -1,5 +1,6 @@
 package com.headissue.compliance;
 
+import com.headissue.compliance.mock.MockDatastoreClient;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import io.grpc.health.v1.HealthCheckResponse;
@@ -22,10 +23,17 @@ public class GrpcServer {
             port = Integer.parseInt(portEnvVar);
         }
 
+        com.headissue.compliance.api.DataStoreClient dataStore;
+        if (Boolean.parseBoolean(System.getenv().get("MOCK_DATASTORE"))) {
+            dataStore = new MockDatastoreClient();
+        } else {
+            dataStore = new DataStoreClientImpl();
+        }
+
         HealthStatusManager health = new HealthStatusManager();
         final Server server = ServerBuilder.forPort(port)
                 .addService(health.getHealthService())
-                .addService(new ToDoService(new DataStoreClient()))
+                .addService(new ToDoService(dataStore))
                 .build()
                 .start();
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
@@ -44,7 +52,7 @@ public class GrpcServer {
                 server.shutdownNow();
             }
         }));
-        Map<String, HealthCheckResponse.ServingStatus> serviceToStatus = new HealthService(new DataStoreClient()).check();
+        Map<String, HealthCheckResponse.ServingStatus> serviceToStatus = new HealthService(dataStore).check();
         if (!serviceToStatus.values().stream().allMatch(s -> s.equals(HealthCheckResponse.ServingStatus.SERVING))) {
             health.setStatus(HealthStatusManager.SERVICE_NAME_ALL_SERVICES, HealthCheckResponse.ServingStatus.NOT_SERVING);
         }
