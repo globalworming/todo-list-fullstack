@@ -41,12 +41,23 @@ describe('saving a todo list', () => {
     });
 });
 
-
-
-
-
-
-
+  it('responds with "Bad Request" when list already exists', (done) => {
+    request('https://bff-fg5blhx72q-ey.a.run.app')
+      .post('/toDoLists')
+      .send({
+        name: 'some list',
+        todoItem: [],
+      })
+      .set('Accept', 'application/json')
+      //.expect('Content-Type', /json/)
+      .expect(400)
+      .then((response) => {
+        assert(response.body.error === 'NAME_LIST_ALREADY_TAKEN','see message name already taken');
+        //assert(response.body.services.find((it) => it.name === 'todo').serving, 'service todo ok');
+        done();
+         });
+      });
+  });
 
 
 //{
