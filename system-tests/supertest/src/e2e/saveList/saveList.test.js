@@ -1,6 +1,36 @@
 import assert from 'assert';
 import request from 'supertest';
 
+async function createExampleList(name) {
+  await request('localhost:8080')
+    .post('/toDoLists')
+    .send({
+      name,
+      toDos: [{
+        description: 'Feed Cat',
+      }],
+    })
+    .set('Accept', 'application/json');
+}
+
+function thenSeeErrorWhenCreatingListWithSameName(randomName, done) {
+  request('localhost:8080')
+    .post('/toDoLists')
+    .send({
+      name: randomName,
+      toDos: [{
+        description: 'Feed Cat',
+      }],
+    })
+    .set('Accept', 'application/json')
+  // .expect('Content-Type', /json/)
+    .expect(400)
+    .then((response) => {
+      assert(response.body.error === 'NAME_LIST_ALREADY_TAKEN', 'see message name already taken');
+      done();
+    });
+}
+
 describe('saving a todo list', () => {
   it('responds with "Bad Request" when list is empty', (done) => {
     request('localhost:8080')
@@ -35,21 +65,10 @@ describe('saving a todo list', () => {
     done();
   });
 
-  it('responds not ok when list already exists', (done) => {
-    request('https://bff-fg5blhx72q-ey.a.run.app')
-      .post('/toDoLists')
-      .send({
-        name: 'name already',
-        todoItem: [],
-      })
-      .set('Accept', 'application/json')
-    // .expect('Content-Type', /json/)
-      .expect(400)
-      .then((response) => {
-        assert(response.body.error === 'NAME_LIST_ALREADY_TAKEN', 'see message name already taken');
-        // assert(response.body.services.find((it) => it.name === 'todo').serving, 'service todo ok');
-        done();
-      });
+  it('responds not ok when list already exists', async (done) => {
+    const randomName = `some name ${Date.now()}`;
+    await createExampleList(randomName);
+    thenSeeErrorWhenCreatingListWithSameName(randomName, done);
   });
 });
 
