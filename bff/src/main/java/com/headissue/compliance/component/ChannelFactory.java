@@ -6,12 +6,13 @@ import io.grpc.ManagedChannelBuilder;
 public class ChannelFactory {
     public static ManagedChannel buildChannel(String env, String defaultHost) {
         String host = System.getenv(env);
+        String stage = System.getenv("STAGE");
         if (host == null) {
             host = defaultHost;
         } else {
             host = host.replace("https://", "");
         }
-        if (host.startsWith("localhost")) {
+        if (host.startsWith("localhost") || stage.equals("local")) {
             return plainTextChannel(host).build();
         } else {
             return tlsChannel(host).build();

@@ -37,7 +37,8 @@ public class ToDoListServlet extends HttpServlet {
                         .build()).collect(Collectors.toList()))
                 .build());
         resp.setStatus(HttpServletResponse.SC_OK);
-        resp.getWriter().println(writeListResult);
+        resp.setContentType(MimeTypes.Type.TEXT_JSON_UTF_8.asString());
+        resp.getWriter().println(JsonFormat.printer().print(writeListResult));
     }
 
     @Override

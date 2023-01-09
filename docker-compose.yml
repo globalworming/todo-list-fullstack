@@ -8,7 +8,8 @@ services:
     ports:
       - "8080:8080"
     environment:
-      TODO_SERVICE_HOST: localhost:8081
+      TODO_SERVICE_HOST: "todo-service:8081"
+      STAGE: "local"
   todo-service:
     container_name: todo-service
     build:
@@ -16,3 +17,4 @@ services:
       dockerfile: todo-service/Dockerfile
     environment:
       PORT: 8081
+      MOCK_DATASTORE: "true"
