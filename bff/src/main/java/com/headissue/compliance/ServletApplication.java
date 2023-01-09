@@ -5,7 +5,7 @@ import com.headissue.compliance.container.LoggingContextInitializer;
 import com.headissue.compliance.filter.AllowAllCorsFilter;
 import com.headissue.compliance.servlet.Health;
 import com.headissue.compliance.servlet.OpenApiSchema;
-import com.headissue.compliance.servlet.ToDoList;
+import com.headissue.compliance.servlet.ToDoListServlet;
 import com.headissue.compliance.todo.v1.ToDoServiceGrpc;
 import grpc.health.v1.HealthGrpc;
 import io.grpc.ManagedChannel;
@@ -43,8 +43,8 @@ public class ServletApplication {
         ServletHolder health = new ServletHolder(new Health(todoHealthStub));
         servletHandler.addServlet(health, "/health");
         ToDoServiceGrpc.ToDoServiceBlockingStub toDoServiceStub = ToDoServiceGrpc.newBlockingStub(todoServiceChannel);
-        ServletHolder toDoList = new ServletHolder(new ToDoList(toDoServiceStub));
-        servletHandler.addServlet(toDoList, "/toDoList");
+        ServletHolder toDoList = new ServletHolder(new ToDoListServlet(toDoServiceStub));
+        servletHandler.addServlet(toDoList, "/toDoLists/*");
         servletHandler.addServlet(OpenApiSchema.class, "/openapi.yaml");
         server.setHandler(servletHandler);
         try {

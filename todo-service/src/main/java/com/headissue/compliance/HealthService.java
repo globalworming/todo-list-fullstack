@@ -1,5 +1,6 @@
 package com.headissue.compliance;
 
+import com.headissue.compliance.api.DataStoreClient;
 import io.grpc.health.v1.HealthCheckResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
