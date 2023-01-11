@@ -2,6 +2,7 @@ package com.headissue.compliance;
 
 import com.headissue.compliance.component.ChannelFactory;
 import com.headissue.compliance.container.LoggingContextInitializer;
+import com.headissue.compliance.error.MyErrorHandler;
 import com.headissue.compliance.filter.AllowAllCorsFilter;
 import com.headissue.compliance.servlet.Health;
 import com.headissue.compliance.servlet.OpenApiSchema;
@@ -46,6 +47,7 @@ public class ServletApplication {
         ServletHolder toDoList = new ServletHolder(new ToDoListServlet(toDoServiceStub));
         servletHandler.addServlet(toDoList, "/toDoLists/*");
         servletHandler.addServlet(OpenApiSchema.class, "/openapi.yaml");
+        server.setErrorHandler(new MyErrorHandler());
         server.setHandler(servletHandler);
         try {
             server.start();

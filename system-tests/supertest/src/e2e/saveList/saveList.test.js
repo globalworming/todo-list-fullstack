@@ -1,35 +1,6 @@
 import assert from 'assert';
 import request from 'supertest';
-
-export async function createExampleList(name) {
-  await request('localhost:8080')
-    .post('/toDoLists')
-    .send({
-      name,
-      toDos: [{
-        description: 'Feed Cat',
-      }],
-    })
-    .set('Accept', 'application/json');
-}
-
-function thenSeeErrorWhenCreatingListWithSameName(randomName, done) {
-  request('localhost:8080')
-    .post('/toDoLists')
-    .send({
-      name: randomName,
-      toDos: [{
-        description: 'Feed Cat',
-      }],
-    })
-    .set('Accept', 'application/json')
-  // .expect('Content-Type', /json/)
-    .expect(400)
-    .then((response) => {
-      assert(response.body.error === 'NAME_LIST_ALREADY_TAKEN', 'see message name already taken');
-      done();
-    });
-}
+import { createExampleList, thenSeeErrorWhenCreatingListWithSameName } from '../steps.test';
 
 describe('saving a todo list', () => {
   it('responds with "Bad Request" when list is empty', (done) => {
@@ -37,13 +8,12 @@ describe('saving a todo list', () => {
       .post('/toDoLists')
       .send({
         name: 'some list',
-        todoItem: [],
+        toDos: [],
       })
       .set('Accept', 'application/json')
       .expect(400)
       .then((response) => {
-        assert(response.body.error === 'EMPTY_LIST', 'list is empty error');
-        // assert(response.body.services.find((it) => it.name === 'todo').serving, 'service todo ok');
+        assert(response.body.message === 'error validating ToDoList');
         done();
       });
   });
@@ -53,7 +23,7 @@ describe('saving a todo list', () => {
       .post('/toDoLists')
       .send({
         name: 'some list',
-        todoItem: [
+        toDos: [
           {
             description: 'feed the cat',
           },
@@ -61,14 +31,15 @@ describe('saving a todo list', () => {
       })
       .set('Accept', 'application/json')
     // .expect('Content-Type', /json/)
-      .expect(200);
-    done();
+      .expect(200)
+      .end(done);
   });
 
   it('responds not ok when list already exists', async (done) => {
     const randomName = `some name ${Date.now()}`;
     await createExampleList(randomName);
-    thenSeeErrorWhenCreatingListWithSameName(randomName, done);
+    thenSeeErrorWhenCreatingListWithSameName(randomName)
+      .then(done);
   });
 });
 

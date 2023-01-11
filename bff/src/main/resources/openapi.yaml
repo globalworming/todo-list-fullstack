@@ -43,6 +43,14 @@ paths:
       responses:
         '200':
           description: successful operation
+        '400':
+          description: bad request
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - $ref: '#/components/schemas/ClientError'
+                  - $ref: '#/components/schemas/ValidationError'
   /toDoLists/{toDoListId}:
     get:
       tags:
@@ -63,6 +71,19 @@ paths:
                 $ref: '#/components/schemas/ToDoList'
 components:
   schemas:
+    ClientError:
+      type: object
+      required:
+        - type
+        - message
+      properties:
+        type:
+          type: string
+          enum:
+            - JsonSyntaxException
+            - ValidationError
+        message:
+          type: string
     ToDoList:
       required:
           - name
@@ -103,3 +124,32 @@ components:
         serving:
           type: boolean
           example: true
+    ValidationError:
+      type: object
+      required:
+        - type
+        - message
+        - errors
+      properties:
+        type:
+          type: string
+          enum:
+            - JsonSyntaxException
+            - ValidationError
+        message:
+          type: string
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/ValidationFieldError'
+    ValidationFieldError:
+      type: object
+      required:
+        - path
+        - error
+      properties:
+        path:
+          type: string
+        error:
+          type: string
+

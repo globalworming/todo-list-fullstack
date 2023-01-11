@@ -3,6 +3,7 @@ package com.headissue.compliance.servlet;
 import com.google.gson.Gson;
 import com.google.protobuf.util.JsonFormat;
 import com.headissue.compliance.domain.ToDoList;
+import com.headissue.compliance.error.ValidationException;
 import com.headissue.compliance.todo.v1.ToDoServiceGrpc;
 import com.headissue.compliance.todo.v1.Todo;
 import jakarta.servlet.http.HttpServlet;
@@ -30,6 +31,7 @@ public class ToDoListServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         BufferedReader reader = req.getReader();
         ToDoList toDoList = gson.fromJson(reader, ToDoList.class);
+        validate(toDoList);
         Todo.WriteListResult writeListResult = todoService.writeList(Todo.ToDoList.newBuilder()
                 .setId(toDoList.name())
                 .addAllToDos(toDoList.toDos().stream().map(it -> Todo.ToDo.newBuilder()
@@ -39,6 +41,15 @@ public class ToDoListServlet extends HttpServlet {
         resp.setStatus(HttpServletResponse.SC_OK);
         resp.setContentType(MimeTypes.Type.TEXT_JSON_UTF_8.asString());
         resp.getWriter().println(JsonFormat.printer().print(writeListResult));
+    }
+
+    private void validate(ToDoList toDoList) {
+        if (toDoList.toDos() == null) {
+            throw new ValidationException(toDoList.getClass().getSimpleName(), "is null", "$.toDos");
+        }
+        if (toDoList.toDos().isEmpty()) {
+            throw new ValidationException(toDoList.getClass().getSimpleName(), "is empty", "$.toDos");
+        }
     }
 
     @Override
