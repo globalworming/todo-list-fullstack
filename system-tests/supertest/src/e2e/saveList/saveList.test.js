@@ -1,7 +1,7 @@
 import assert from 'assert';
 import request from 'supertest';
 
-async function createExampleList(name) {
+export async function createExampleList(name) {
   await request('localhost:8080')
     .post('/toDoLists')
     .send({
@@ -49,7 +49,7 @@ describe('saving a todo list', () => {
   });
 
   it('responds ok when list is created successfully', (done) => {
-    request('https://bff-fg5blhx72q-ey.a.run.app')
+    request('localhost:8080')
       .post('/toDoLists')
       .send({
         name: 'some list',
