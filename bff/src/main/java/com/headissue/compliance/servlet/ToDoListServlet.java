@@ -50,6 +50,7 @@ public class ToDoListServlet extends HttpServlet {
         if (toDoList.toDos().isEmpty()) {
             throw new ValidationException(toDoList.getClass().getSimpleName(), "is empty", "$.toDos");
         }
+        // TODO check name already taken and throw validation error
     }
 
     @Override

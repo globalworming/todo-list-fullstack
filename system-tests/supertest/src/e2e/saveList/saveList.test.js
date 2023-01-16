@@ -14,6 +14,7 @@ describe('saving a todo list', () => {
       .expect(400)
       .then((response) => {
         assert(response.body.message === 'error validating ToDoList');
+        assert(response.body.errors[0].path === '$.toDos');
         done();
       });
   });
