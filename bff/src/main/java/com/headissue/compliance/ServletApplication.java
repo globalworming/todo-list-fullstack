@@ -29,21 +29,22 @@ public class ServletApplication {
     private static final ManagedChannel todoServiceChannel = ChannelFactory.buildChannel("TODO_SERVICE_HOST", "localhost:8081");
 
     public static void main(String[] args) {
-        String portEnvVar = System.getenv().get("PORT");
-        int port = 8080;
-        if (portEnvVar != null && !portEnvVar.equals("")) {
-            port = Integer.parseInt(portEnvVar);
-        }
+        ToDoServiceGrpc.ToDoServiceBlockingStub toDoServiceStub = ToDoServiceGrpc.newBlockingStub(todoServiceChannel);
+        HealthGrpc.HealthBlockingStub todoHealthStub = HealthGrpc.newBlockingStub(todoServiceChannel);
+        start(todoHealthStub, toDoServiceStub, getPort());
+    }
 
+    public static void test(HealthGrpc.HealthBlockingStub todoHealthStub, ToDoServiceGrpc.ToDoServiceBlockingStub toDoServiceStub) {
+        start(todoHealthStub, toDoServiceStub, 8080);
+    }
+
+    private static void start(HealthGrpc.HealthBlockingStub todoHealthStub, ToDoServiceGrpc.ToDoServiceBlockingStub toDoServiceStub, int port) {
         Server server = new Server(port);
-
         ServletContextHandler servletHandler = new ServletContextHandler(NO_SESSIONS);
         servletHandler.addServletContainerInitializer(new LoggingContextInitializer());
         servletHandler.addFilter(AllowAllCorsFilter.class, "/*", EnumSet.of(REQUEST, FORWARD));
-        HealthGrpc.HealthBlockingStub todoHealthStub = HealthGrpc.newBlockingStub(todoServiceChannel);
         ServletHolder health = new ServletHolder(new Health(todoHealthStub));
         servletHandler.addServlet(health, "/health");
-        ToDoServiceGrpc.ToDoServiceBlockingStub toDoServiceStub = ToDoServiceGrpc.newBlockingStub(todoServiceChannel);
         ServletHolder toDoList = new ServletHolder(new ToDoListServlet(toDoServiceStub));
         servletHandler.addServlet(toDoList, "/toDoLists/*");
         servletHandler.addServlet(OpenApiSchema.class, "/openapi.yaml");
@@ -58,6 +59,14 @@ public class ServletApplication {
         } finally {
             server.destroy();
         }
+    }
+    private static int getPort() {
+        String portEnvVar = System.getenv().get("PORT");
+        int port = 8080;
+        if (portEnvVar != null && !portEnvVar.equals("")) {
+            port = Integer.parseInt(portEnvVar);
+        }
+        return port;
     }
 }
 
