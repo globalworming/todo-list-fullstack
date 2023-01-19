@@ -54,7 +54,15 @@ public class ServletApplication {
             server.start();
             server.join();
         } catch (Exception ex) {
-            logger.error("startup", ex);
+            if (ex instanceof InterruptedException) {
+                try {
+                    server.stop();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+                return;
+            }
+            logger.error("caught", ex);
             System.exit(1);
         } finally {
             server.destroy();
