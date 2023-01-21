@@ -23,3 +23,5 @@ buildNumber.properties
 **/*.tfstate.*
 
 **/*.tfvars
+
+**/node_modules
