@@ -26,6 +26,7 @@ class SaveListTest {
     @Test
     @Disabled
     void whereTodoListIsSaved() {
+        // FIXME, mock success response
         Mockito.when(ApplicationServerExtension.toDoServiceStub.writeList(Mockito.any())).thenThrow(new RuntimeException("test"));
 
         given()
