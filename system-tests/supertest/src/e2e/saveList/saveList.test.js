@@ -2,8 +2,8 @@ import assert from 'assert';
 import request from 'supertest';
 
 describe('saving a todo list', () => {
-  it('responds with "Bad Request" when list is empty', (done) => {
-    request('https://bff-fg5blhx72q-ey.a.run.app')
+  it('response with "Bad Request" when list is empty', (done) => {
+    request('localhost:8080')
       .post('/toDoLists')
       .send({
         name: 'some list',
@@ -20,7 +20,7 @@ describe('saving a todo list', () => {
   });
 
   it('responds ok when list is created successfully', (done) => {
-    request('https://bff-fg5blhx72q-ey.a.run.app')
+    request(''localhost:8080'')
       .post('/toDoLists')
       .send({
         name: 'some list',
@@ -38,7 +38,7 @@ describe('saving a todo list', () => {
   });
 
   it('responds not ok when list already exists', (done) => {
-    request('https://bff-fg5blhx72q-ey.a.run.app')
+    request(''localhost:8080')
       .post('/toDoLists')
       .send({
         name: 'name already',
@@ -50,9 +50,9 @@ describe('saving a todo list', () => {
       .then((response) => {
         assert(response.body.error === 'NAME_LIST_ALREADY_TAKEN','see message name already taken');
         //assert(response.body.services.find((it) => it.name === 'todo').serving, 'service todo ok');
-      .end(done);
+         (done);
 
-  });
+    });
 });
 
 
