@@ -37,4 +37,23 @@ class SaveListTest {
                 .statusCode(200);
 
     }
+
+    @Test
+
+    void whereNameAlreadyExists() {
+
+        Mockito.when(ApplicationServerExtension.toDoServiceStub.readList(Mockito.any())).thenReturn(null);
+
+        given()
+                .contentType(ContentType.JSON).body("{\"name\": \"some list\",\"toDos\": [{\"description\":  \"feed the cat\"}]}")
+
+                .when()
+                .post("http://localhost:8080/toDoLists").
+                then()
+                .statusCode(400)
+        .body("errors[0].path", equalTo("$.name"))
+        .body("errors[0].error", equalTo("alreadyexists"));
+
+    }
+
 }
