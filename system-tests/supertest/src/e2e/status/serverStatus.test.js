@@ -3,7 +3,7 @@ import request from 'supertest';
 
 describe('checking backend health', () => {
   it('responds with ok', (done) => {
-    request('https://bff-fg5blhx72q-ey.a.run.app')
+    request('http://localhost:8080')
       .get('/health')
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
@@ -15,5 +15,3 @@ describe('checking backend health', () => {
       });
   });
 });
-
-
