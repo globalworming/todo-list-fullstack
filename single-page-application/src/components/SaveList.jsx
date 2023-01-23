@@ -6,6 +6,19 @@ function SaveList({ toDoList }) {
   const [ok, setOk] = useState(undefined);
 
   function saveList() {
+    if (!toDoList) {
+      errorCtx.setError(new Error('toDo list is empty'));
+      return;
+    }
+    if (!toDoList.toDos) {
+      errorCtx.setError(new Error('toDo list has no toDos'));
+      return;
+    }
+    if (!toDoList.toDos.length <= 0) {
+      errorCtx.setError(new Error('toDo list has no items'));
+      return;
+    }
+
     const requestOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

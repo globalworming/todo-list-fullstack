@@ -5,9 +5,6 @@ import SaveList from '../../src/components/SaveList';
 
 describe('where we save a todo list', () => {
   it('shows error when list is empty', () => {
-    cy.intercept('POST', '/toDoLists', {
-      statusCode: 400, body: { message: 'error validating ToDoList', errors: [{ path: '$.toDos', error: 'is empty' }] },
-    });
     cy.mount(
       <ErrorDisplayBoundary>
         <SaveList toDoList={undefined} />
