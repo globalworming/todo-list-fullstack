@@ -1,17 +1,21 @@
 import React from 'react';
-import App from '../../src/App';
+import ErrorDisplayBoundary from '../../src/context/ErrorContext';
+import ShowsErrorFromContext from '../../src/components/ShowsErrorFromContext';
+import SaveList from '../../src/components/SaveList';
 
 describe('where we save a todo list', () => {
   it('shows error when list is empty', () => {
     cy.intercept('POST', '/toDoLists', {
       statusCode: 400, body: { message: 'error validating ToDoList', errors: [{ path: '$.toDos', error: 'is empty' }] },
     });
-    // cy.mount(<App />);
-    // TODO set name "some name" of list
-    // we know there will be an input with className "set-name"
-    // TODO click "save"
-    // we know that there will be some kind of button className "save-list"
-    // then we should see error message
+    cy.mount(
+      <ErrorDisplayBoundary>
+        <SaveList toDoList={undefined} />
+        <ShowsErrorFromContext />
+      </ErrorDisplayBoundary>,
+    );
+    cy.get('.save-list').click();
+    cy.get('div[role="alert"]').should('exist');
   });
 
   it('list name already exists', () => {
