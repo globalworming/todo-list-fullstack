@@ -1,0 +1,47 @@
+{
+	"info": {
+		"_postman_id": "456347b7-abfa-4614-88ed-37d684dd18e0",
+		"name": "todo-fullstack",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "health",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('bff is serving', function () {",
+							"    const json = pm.response.json()",
+							"    pm.expect(json.services.find(it => it.name==='bff').serving).to.equal(true)",
+							"});",
+							"",
+							"pm.test('todo is serving', function () {",
+							"    const json = pm.response.json()",
+							"    pm.expect(json.services.find(it => it.name==='todo').serving).to.equal(true)",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/health",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"health"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
