@@ -11,8 +11,8 @@ public class SaveListStepDefinitions {
     @When("{actor} saves an empty todo list")
     public void saveAnEmptyTodoList(Actor actor) {
         actor.attemptsTo(Open.url("http://localhost:3000"));
-        // TODO enter list name
-        // TODO click save button
+        // TODO give the list a name
+        // TODO save
     }
 
     @Then("{actor} should see the error message {message}")
