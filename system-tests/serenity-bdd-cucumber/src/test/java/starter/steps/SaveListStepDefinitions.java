@@ -3,7 +3,6 @@ package starter.steps;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import net.serenitybdd.screenplay.Actor;
-import net.serenitybdd.screenplay.abilities.BrowseTheWeb;
 import net.serenitybdd.screenplay.actions.Open;
 
 public class SaveListStepDefinitions {
@@ -15,7 +14,7 @@ public class SaveListStepDefinitions {
         // TODO save
     }
 
-    @Then("{actor} should see the error message {message}")
+    @Then("{actor} should see the error message {string}")
     public void shouldSeeTheErrorMessage(Actor actor, String message) {
         // TODO actor.should(seeThat(....
     }
