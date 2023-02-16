@@ -53,10 +53,8 @@ public class ToDoListServlet extends HttpServlet {
         // TODO check name already taken and throw validation error
         String name = toDoList.name();
         Todo.ToDoList alreadyPresentToDoList = todoService.readList(Todo.ToDoListRequest.newBuilder().setId(name).build());
-        if (alreadyPresentToDoList == null) {
+        if (alreadyPresentToDoList != null) {
             throw new ValidationException(toDoList.getClass().getSimpleName(), "alreadyexists", "$.name");
-
-
         }
     }
 

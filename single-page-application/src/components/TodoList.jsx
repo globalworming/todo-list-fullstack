@@ -4,10 +4,13 @@ import { v4 as uuid } from 'uuid';
 
 import TodoItem from './TodoItem';
 import { reducer, useAsyncReducer } from '../state';
+import SaveList from './SaveList';
 
 export default function TodoList({ match }) {
   const [todos, dispatch] = useAsyncReducer(reducer, []);
   const [newTodo, setNewTodo] = useState('');
+  const [name, setName] = useState('todos');
+  const [editName, setEditName] = useState(false);
 
   const onNewValue = (event) => {
     setNewTodo(event.target.value);
@@ -69,10 +72,24 @@ export default function TodoList({ match }) {
   const anyCompleted = todos?.some((todo) => todo.completed);
   const left = todos?.reduce((acc, curr) => acc + (curr.completed ? 0 : 1), 0);
 
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      setEditName(false);
+    }
+  };
+
   return (
     <>
       <header className="header">
-        <h1>todos</h1>
+        <div className="list-name">
+          {editName || <h1>{name}</h1>}
+          {editName || <button onClick={() => setEditName(true)} type="button" data-testid="edit-name">edit name</button>}
+          {/* eslint-disable-next-line jsx-a11y/no-autofocus */}
+          {editName && <h1><input autoFocus type="text" value={name} onChange={(e) => setName(e.target.value)} onKeyDown={handleKeyDown} /></h1>}
+          {editName && <button onClick={() => setEditName(false)} type="button" data-testid="done-edit-name">done</button>}
+          <SaveList toDoList={{ name, toDos: todos }} />
+
+        </div>
         <input
           className="new-todo"
           placeholder="What needs to be done?"
@@ -103,7 +120,7 @@ export default function TodoList({ match }) {
 
       {todos?.length > 0 && (
         <footer className="footer">
-          <span className="todo-count">
+          <span className="todo-count" data-testid="count">
             <strong>{left}</strong>
             {' '}
             {left === 1 ? 'item' : 'items'}
