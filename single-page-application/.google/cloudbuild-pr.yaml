@@ -21,6 +21,14 @@ steps:
     args:
       - run
       - test
+  - id: cypress test
+    name: node:19.1.0-alpine3.16
+    dir: single-page-application
+    entrypoint: npx
+    args:
+      - cypress
+      - run
+      - --component
   - id: build
     name: node:19.1.0-alpine3.16
     dir: single-page-application

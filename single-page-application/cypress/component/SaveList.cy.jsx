@@ -11,7 +11,7 @@ describe('where we save a todo list', () => {
         <ShowsErrorFromContext />
       </ErrorDisplayBoundary>,
     );
-    cy.get('.save-list').click();
+    cy.get('[data-testid="save-list"]').click();
     cy.get('div[role="alert"]').should('exist');
   });
 
