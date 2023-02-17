@@ -20,3 +20,9 @@ services:
       GOOGLE_CLOUD_PROJECT: "life-compliance"
       PORT: 8081
       MOCK_DATASTORE: "true"
+  single-page-application:
+    container_name: single-page-application
+    build:
+      context: single-page-application
+    ports:
+      - "3000:8080"
