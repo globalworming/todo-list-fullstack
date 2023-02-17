@@ -6,8 +6,8 @@ import { HashRouter } from 'react-router-dom';
 import { act } from 'react-dom/test-utils';
 import { rest } from 'msw';
 import TodoList from './TodoList';
-import server from './TestServer.test';
 import ErrorDisplayBoundary from '../context/ErrorContext';
+import server from '../setupTests';
 
 const user = userEvent.setup();
 const todoList = (
