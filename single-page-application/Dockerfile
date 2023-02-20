@@ -5,13 +5,14 @@ COPY package-lock.json ./
 RUN npm ci
 
 FROM node:19.1.0-alpine3.16 as build
+ARG STAGE
 WORKDIR /app
 COPY --from=dependencies /app/node_modules ./node_modules
 COPY --from=dependencies /app/package.json ./package.json
 COPY --from=dependencies /app/package-lock.json ./package-lock.json
 COPY ./src ./src
 COPY ./public ./public
-COPY ./.env ./.env
+COPY ./.env${STAGE} ./.env
 RUN npm run build
 
 # Production image, copy all the files and run next

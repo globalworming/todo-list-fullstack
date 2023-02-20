@@ -23,6 +23,8 @@ services:
   single-page-application:
     container_name: single-page-application
     build:
+      args:
+        STAGE: .local
       context: single-page-application
     ports:
       - "3000:8080"
