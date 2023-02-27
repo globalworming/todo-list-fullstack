@@ -1,5 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { ErrorContext } from '../context/ErrorContext';
+import ToDoList from '../model/ToDoList';
+import ToDo from '../model/ToDo';
 
 function SaveList({ toDoList }) {
   const errorCtx = useContext(ErrorContext);
@@ -19,10 +21,14 @@ function SaveList({ toDoList }) {
       errorCtx.setError(new Error('toDo list has no items'));
       return;
     }
+    const toDoListToSend = new ToDoList(
+      toDoList.name,
+      toDoList.toDos.map((todo) => new ToDo(todo.title)),
+    );
     const requestOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(toDoList),
+      body: JSON.stringify(toDoListToSend),
     };
     setSaving(true);
     fetch(`${process.env.REACT_APP_GATEWAY}/toDoLists`, requestOptions)

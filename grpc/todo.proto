@@ -8,7 +8,7 @@ service ToDoService {
 }
 
 message ToDoList {
-  string id = 1;
+  string name = 1;
   repeated ToDo toDos = 2;
 }
 

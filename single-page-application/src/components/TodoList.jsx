@@ -5,6 +5,7 @@ import { v4 as uuid } from 'uuid';
 import TodoItem from './TodoItem';
 import { reducer, useAsyncReducer } from '../state';
 import SaveList from './SaveList';
+import LoadList from './LoadList';
 
 export default function TodoList({ match }) {
   const [todos, dispatch] = useAsyncReducer(reducer, []);
@@ -51,6 +52,10 @@ export default function TodoList({ match }) {
         await dispatch({ type: 'delete', value: id });
         break;
 
+      case 'add':
+        await dispatch({ type: 'add', value: todo });
+        break;
+
       default:
         break;
     }
@@ -88,6 +93,7 @@ export default function TodoList({ match }) {
           {editName && <h1><input autoFocus type="text" value={name} onChange={(e) => setName(e.target.value)} onKeyDown={handleKeyDown} /></h1>}
           {editName && <button onClick={() => setEditName(false)} type="button" data-testid="done-edit-name">done</button>}
           <SaveList toDoList={{ name, toDos: todos }} />
+          <LoadList toDos={todos || []} onUpdate={updateTodo} setListName={setName} />
 
         </div>
         <input

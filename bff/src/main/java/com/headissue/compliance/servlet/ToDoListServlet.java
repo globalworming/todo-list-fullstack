@@ -33,7 +33,7 @@ public class ToDoListServlet extends HttpServlet {
         ToDoList toDoList = gson.fromJson(reader, ToDoList.class);
         validate(toDoList);
         Todo.WriteListResult writeListResult = todoService.writeList(Todo.ToDoList.newBuilder()
-                .setId(toDoList.name())
+                .setName(toDoList.name())
                 .addAllToDos(toDoList.toDos().stream().map(it -> Todo.ToDo.newBuilder()
                         .setDescription(it.description())
                         .build()).collect(Collectors.toList()))

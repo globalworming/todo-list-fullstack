@@ -6,19 +6,23 @@ import { HashRouter } from 'react-router-dom';
 import { act } from 'react-dom/test-utils';
 import { rest } from 'msw';
 import TodoList from './TodoList';
+import TodoListModel from '../model/ToDoList';
 import ErrorDisplayBoundary from '../context/ErrorContext';
 import server from '../setupTests';
+import ToDo from '../model/ToDo';
+import ShowsErrorFromContext from './ShowsErrorFromContext';
 
 const user = userEvent.setup();
 const todoList = (
   <HashRouter>
     <ErrorDisplayBoundary>
+      <ShowsErrorFromContext />
       <TodoList match={{ params: [] }} />
     </ErrorDisplayBoundary>
   </HashRouter>
 );
 
-function ensureListNameIs(name) {
+function expectListNameToBe(name) {
   expect(screen.getByText(name)).toBeInTheDocument();
 }
 
@@ -31,9 +35,9 @@ async function changeListNameTo(name) {
 
 test('where we change the list name', async () => {
   render(todoList);
-  ensureListNameIs('todos');
+  expectListNameToBe('todos');
   await changeListNameTo('my list');
-  ensureListNameIs('my list');
+  expectListNameToBe('my list');
 });
 
 async function addToDos(...items) {
@@ -55,12 +59,42 @@ test('where we add todo items', async () => {
 
 test('where we save a list', async () => {
   server.use(
-    rest.post(`${process.env.REACT_APP_GATEWAY}/toDoLists`, (req, res, ctx) => res(ctx.status(200))),
+    rest.post(`${process.env.REACT_APP_GATEWAY}/toDoLists`, async (req, res, ctx) => {
+      const json = await req.json();
+      if (json.name !== 'todos') {
+        return res(ctx.status(500), ctx.json({ message: 'bad request, wrong name' }));
+      }
+      if (json.toDos[0].description !== 'feed cat') {
+        return res(ctx.status(500), ctx.json({ message: 'bad request, wrong description' }));
+      }
+      return res(ctx.status(200));
+    }),
   );
   render(todoList);
   await addToDos('feed cat', 'feed dog');
   await user.click(screen.getByTestId('save-list'));
   await waitFor(() => {
     expect(screen.getByTestId('saved-list')).toBeInTheDocument();
+  });
+});
+
+test('where we load a list', async () => {
+  server.use(
+    rest.get(`${process.env.REACT_APP_GATEWAY}/toDoLists/my%20list`, (req, res, ctx) => res(ctx.status(200), ctx.json(
+      new TodoListModel('my list', [new ToDo('feed whale'), new ToDo('feed dog')]),
+    ))),
+  );
+  render(todoList);
+
+  await act(async () => {
+    await user.click(screen.getByTestId('load-list'));
+    await user.keyboard('my list');
+    await user.keyboard('{Enter}');
+  });
+
+  await waitFor(() => {
+    expectListNameToBe('my list');
+    expect(screen.getByTestId('count')).toHaveTextContent('2 items left');
+    expect(screen.getByText('feed whale')).toBeInTheDocument();
   });
 });
