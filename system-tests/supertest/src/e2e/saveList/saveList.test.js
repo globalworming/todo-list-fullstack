@@ -36,11 +36,10 @@ describe('saving a todo list', () => {
       .end(done);
   });
 
-  it('responds not ok when list already exists', async (done) => {
+  it('responds not ok when list already exists', async () => {
     const randomName = `some name ${Date.now()}`;
     await createExampleList(randomName);
-    thenSeeErrorWhenCreatingListWithSameName(randomName)
-      .then(done);
+    await thenSeeErrorWhenCreatingListWithSameName(randomName);
   });
 });
 

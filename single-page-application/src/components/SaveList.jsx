@@ -38,7 +38,10 @@ function SaveList({ toDoList }) {
             throw new Error(await response.text());
           }
           const resp = await response.json();
-          throw new Error(`${resp.message} ${JSON.stringify(resp.errors)}`);
+          if (resp.errors?.length > 0) {
+            throw new Error(`${resp.message} ${JSON.stringify(resp.errors)}`);
+          }
+          throw new Error(`${resp.message}`);
         }
       })
       .then(() => {

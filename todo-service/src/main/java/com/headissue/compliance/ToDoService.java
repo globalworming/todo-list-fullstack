@@ -19,9 +19,18 @@ public class ToDoService extends ToDoServiceGrpc.ToDoServiceImplBase {
 
     @Override
     public void writeList(Todo.ToDoList request, StreamObserver<Todo.WriteListResult> responseObserver) {
-        dataStore.createTodoList(request.getId(), request.getToDosList());
-        responseObserver.onNext(Todo.WriteListResult.getDefaultInstance());
-        responseObserver.onCompleted();
+        try {
+            dataStore.createTodoList(request.getId(), request.getToDosList());
+            responseObserver.onNext(Todo.WriteListResult.getDefaultInstance());
+            responseObserver.onCompleted();
+        } catch (DatastoreException e) {
+            com.google.rpc.Status status = com.google.rpc.Status.newBuilder()
+                    .setCode(e.getCode())
+                    .setMessage(e.getMessage())
+                    .build();
+            responseObserver.onError(StatusProto.toStatusRuntimeException(status));
+        }
+
     }
 
     @Override
