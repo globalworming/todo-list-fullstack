@@ -4,10 +4,17 @@
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
             <level>INFO</level>
         </filter>
-        <redirectToStdout>true</redirectToStdout>
+        <redirectToStdout>false</redirectToStdout>
+    </appender>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d [%thread] %-5level  %logger{35} - %msg%n</pattern>
+        </encoder>
     </appender>
 
     <root level="info">
         <appender-ref ref="CLOUD" />
+        <appender-ref ref="STDOUT" />
     </root>
 </configuration>

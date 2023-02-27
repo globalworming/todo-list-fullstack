@@ -4,12 +4,10 @@ import com.google.cloud.datastore.DatastoreException;
 import com.google.cloud.datastore.Key;
 import com.headissue.compliance.todo.v1.Todo;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 import static io.grpc.Status.Code.ALREADY_EXISTS;
+import static io.grpc.Status.Code.NOT_FOUND;
 
 public class MockDatastoreClient implements com.headissue.compliance.api.DataStoreClient {
 
@@ -37,6 +35,9 @@ public class MockDatastoreClient implements com.headissue.compliance.api.DataSto
 
     @Override
     public Todo.ToDoList queryToDoList(String id) {
+        if (!mapsNameToToDo.containsKey(id)) {
+            throw new DatastoreException(NOT_FOUND.value(), "no such list", "");
+        }
         return Todo.ToDoList.newBuilder()
                 .addAllToDos(mapsNameToToDo.get(id))
                 .setId(id)
