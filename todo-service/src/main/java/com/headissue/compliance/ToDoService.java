@@ -20,7 +20,7 @@ public class ToDoService extends ToDoServiceGrpc.ToDoServiceImplBase {
     @Override
     public void writeList(Todo.ToDoList request, StreamObserver<Todo.WriteListResult> responseObserver) {
         try {
-            dataStore.createTodoList(request.getId(), request.getToDosList());
+            dataStore.createTodoList(request.getName(), request.getToDosList());
             responseObserver.onNext(Todo.WriteListResult.getDefaultInstance());
             responseObserver.onCompleted();
         } catch (DatastoreException e) {

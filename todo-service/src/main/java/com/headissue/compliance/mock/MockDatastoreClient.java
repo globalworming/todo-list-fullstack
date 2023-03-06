@@ -40,7 +40,7 @@ public class MockDatastoreClient implements com.headissue.compliance.api.DataSto
         }
         return Todo.ToDoList.newBuilder()
                 .addAllToDos(mapsNameToToDo.get(id))
-                .setId(id)
+                .setName(id)
                 .build();
     }
 }

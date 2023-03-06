@@ -14,7 +14,7 @@ public class ServerStatusStepDefinitions {
 
     @When("{actor} checks the server status")
     public void checkTheServerStatus(Actor actor) {
-        actor.attemptsTo(Open.url("https://single-page-application-fg5blhx72q-ey.a.run.app"));
+        actor.attemptsTo(Open.url("http://localhost:3000"));
     }
 
     @Then("{actor} should see that the server {string} shows status {string}")

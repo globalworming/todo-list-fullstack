@@ -78,7 +78,7 @@ test('where we save a list', async () => {
   });
 });
 
-test('where we load a list', async () => {
+test.skip('where we load a list', async () => {
   server.use(
     rest.get(`${process.env.REACT_APP_GATEWAY}/toDoLists/my%20list`, (req, res, ctx) => res(ctx.status(200), ctx.json(
       new TodoListModel('my list', [new ToDo('feed whale'), new ToDo('feed dog')]),

@@ -26,6 +26,6 @@ export function thenSeeErrorWhenCreatingListWithSameName(randomName) {
   // .expect('Content-Type', /json/)
     .expect(400)
     .then((response) => {
-      assert(response.body.message === 'ALREADY_EXISTS: entity already exists', 'see message name already taken');
+      assert(response.body.errors[0].error === 'alreadyexists', 'name already taken');
     });
 }

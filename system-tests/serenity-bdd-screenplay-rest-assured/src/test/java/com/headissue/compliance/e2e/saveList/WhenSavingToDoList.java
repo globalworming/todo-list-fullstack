@@ -13,23 +13,26 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
+import java.util.UUID;
+
 import static net.serenitybdd.screenplay.rest.questions.ResponseConsequence.seeThatResponse;
 
 @ExtendWith(SerenityJUnit5Extension.class)
 class WhenSavingToDoList {
 
-    Cast cast = Cast.whereEveryoneCan(CallAnApi.at("https://bff-fg5blhx72q-ey.a.run.app"));
+    Cast cast = Cast.whereEveryoneCan(CallAnApi.at("http://localhost:8080"));
 
     @Test
     void whereListIsEmpty() {
         Actor actor = cast.actorNamed("Olivian");
         actor.attemptsTo(new Post("/toDoLists")
                 .with(request -> request.header("Content-Type", "application/json")
-                .body("{name: 'some list', todoItem: []}")
+                .body("{name: 'some list', toDos: []}")
         ));
         actor.should(seeThatResponse("bad request", response -> response
                 .statusCode(400)
-                .body("error", CoreMatchers.is("EMPTY_LIST"))
+                .body("errors[0].error", CoreMatchers.is("is empty"))
+                .body("errors[0].path", CoreMatchers.is("$.toDos"))
         ));
     }
 
@@ -38,7 +41,7 @@ class WhenSavingToDoList {
         Actor actor = cast.actorNamed("Olivian");
         actor.attemptsTo(new Post("/toDoLists")
                 .with(request -> request.header("Content-Type", "application/json")
-                .body("{name: 'some list', todoItem: [{description: 'feed the cat'}]}")
+                .body("{name: 'some list "+ UUID.randomUUID() +"', toDos: [{description: 'feed the cat'}]}")
         ));
         actor.should(seeThatResponse("bad request", response -> response
                 .statusCode(200)

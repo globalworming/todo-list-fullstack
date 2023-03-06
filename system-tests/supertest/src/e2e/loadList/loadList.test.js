@@ -1,26 +1,23 @@
-import assert from 'assert';
 import request from 'supertest';
-import { createExampleList } from '../saveList/saveList.test';
+import assert from 'assert';
+import { createExampleList } from '../../steps.test';
 
 describe('loading a todo list', () => {
-  it('where list loads successfully', async (done) => {
+  it('where list loads successfully', async () => {
     const name = `name${Date.now()}`;
     await createExampleList(name);
     await request('localhost:8080')
       .get(`/toDoLists/${name}`)
-      .expect(200, {
-        name,
-        toDos: [{
-          description: 'Feed Cat',
-        }],
+      .expect(200)
+      .then((response) => {
+        assert(response.body.name === name);
+        assert(response.body.toDos[0].description === 'Feed Cat');
       });
-    done();
   });
 
-  it('where list does not exist', async (done) => {
+  it('where list does not exist', async () => {
     await request('localhost:8080')
       .get('/toDoLists/this-does-not-exist')
       .expect(400);
-    done();
   });
 });

@@ -54,7 +54,7 @@ public class DataStoreClientImpl implements DataStoreClient {
                         .build();
 
         QueryResults<Entity> toDoListItems = datastore.run(query);
-        Todo.ToDoList.Builder builder = Todo.ToDoList.newBuilder().setId(toDoList.getKey().getName());
+        Todo.ToDoList.Builder builder = Todo.ToDoList.newBuilder().setName(toDoList.getKey().getName());
         toDoListItems.forEachRemaining(item -> {
             builder.addToDos(Todo.ToDo.newBuilder().setDescription(item.getString("description")).build());
         });

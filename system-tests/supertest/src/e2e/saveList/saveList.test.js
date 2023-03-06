@@ -1,6 +1,6 @@
 import assert from 'assert';
 import request from 'supertest';
-import { createExampleList, thenSeeErrorWhenCreatingListWithSameName } from '../steps.test';
+import { createExampleList, thenSeeErrorWhenCreatingListWithSameName } from '../../steps.test';
 
 describe('saving a todo list', () => {
   it('responds with "Bad Request" when list is empty', (done) => {
@@ -23,7 +23,7 @@ describe('saving a todo list', () => {
     request('localhost:8080')
       .post('/toDoLists')
       .send({
-        name: 'some list',
+        name: `some list ${Date.now()}`,
         toDos: [
           {
             description: 'feed the cat',

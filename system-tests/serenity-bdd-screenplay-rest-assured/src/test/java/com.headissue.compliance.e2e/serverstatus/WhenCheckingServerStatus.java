@@ -15,7 +15,7 @@ import static net.serenitybdd.screenplay.rest.questions.ResponseConsequence.seeT
 @ExtendWith(SerenityJUnit5Extension.class)
 class WhenCheckingServerStatus {
 
-    Cast cast = Cast.whereEveryoneCan(CallAnApi.at("https://bff-fg5blhx72q-ey.a.run.app"));
+    Cast cast = Cast.whereEveryoneCan(CallAnApi.at("http://localhost:8080"));
 
     @Test
     void whereAllIsOK() {

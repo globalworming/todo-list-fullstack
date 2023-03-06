@@ -39,7 +39,7 @@ public class ToDoListServlet extends HttpServlet {
                         .build()).collect(Collectors.toList()))
                 .build());
         resp.setStatus(HttpServletResponse.SC_OK);
-        resp.setContentType(MimeTypes.Type.TEXT_JSON_UTF_8.asString());
+        resp.setContentType(MimeTypes.Type.APPLICATION_JSON_UTF_8.asString());
         resp.getWriter().println(JsonFormat.printer().print(writeListResult));
     }
 
@@ -52,19 +52,20 @@ public class ToDoListServlet extends HttpServlet {
         }
         // TODO check name already taken and throw validation error
         String name = toDoList.name();
+        Todo.ToDoList alreadyPresentToDoList = null;
         try {
-            Todo.ToDoList alreadyPresentToDoList = todoService.readList(Todo.ToDoListRequest.newBuilder().setId(name).build());
-            if (alreadyPresentToDoList != null) {
-                throw new ValidationException(toDoList.getClass().getSimpleName(), "alreadyexists", "$.name");
-            }
+            alreadyPresentToDoList = todoService.readList(Todo.ToDoListRequest.newBuilder().setId(name).build());
         } catch (Exception ignore) {}
+        if (alreadyPresentToDoList != null) {
+            throw new ValidationException(toDoList.getClass().getSimpleName(), "alreadyexists", "$.name");
+        }
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String id = Arrays.stream(req.getPathInfo().split("/")).reduce((first, second) -> second).orElseThrow();
         Todo.ToDoList toDoList = todoService.readList(Todo.ToDoListRequest.newBuilder().setId(id).build());
-        resp.setContentType(MimeTypes.Type.TEXT_JSON_UTF_8.asString());
+        resp.setContentType(MimeTypes.Type.APPLICATION_JSON_UTF_8.asString());
         resp.getWriter().write(JsonFormat.printer().print(toDoList));
     }
 }
