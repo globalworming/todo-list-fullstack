@@ -42,7 +42,7 @@ system-tests() {
   )
   (
     cd system-tests/serenity-bdd-cucumber
-    ./gradlew test
+    ./mvnw verify
   )
 }
 
