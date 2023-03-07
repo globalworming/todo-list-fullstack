@@ -1,39 +1,36 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
+import { ToDoListContext } from '../context/ToDoListContext';
 
-function TodoItem({ todo, onUpdate }) {
+function ToDoItem({ toDo }) {
+  const { updateToDo, deleteToDo } = useContext(ToDoListContext);
   const [editing, setEditing] = useState(false);
-  const [modifiedTodo, setModifiedTodo] = useState(todo);
+  const [description, setDescription] = useState(toDo.description);
 
-  const onCompletion = async () => {
-    onUpdate({ detail: { type: 'toggleCompletion', id: todo.id } });
+  const onNewValue = (e) => {
+    setDescription(e.target.value);
   };
 
-  const onDelete = async () => {
-    onUpdate({ detail: { type: 'delete', id: todo.id } });
+  const onCheckChange = () => {
+    updateToDo({ ...toDo, done: !toDo.done });
   };
 
-  const onNewValue = (event) => {
-    setModifiedTodo({ ...modifiedTodo, title: event.target.value });
+  const onDelete = () => {
+    deleteToDo(toDo);
   };
 
   const handleTitleUpdate = () => {
-    const trimmedTitle = modifiedTodo.title.trim();
+    const trimmedTitle = description.trim();
     if (trimmedTitle.length > 0) {
-      onUpdate({
-        detail: {
-          type: 'update',
-          todo: { ...modifiedTodo, title: trimmedTitle },
-        },
-      });
+      updateToDo({ ...toDo, description: trimmedTitle });
     } else {
-      onDelete();
+      deleteToDo(toDo);
     }
   };
 
   const onKeyDown = (event) => {
     switch (event.key) {
       case 'Escape':
-        setModifiedTodo(todo);
+        setDescription(toDo.description);
         setEditing(false);
         break;
 
@@ -70,25 +67,25 @@ function TodoItem({ todo, onUpdate }) {
     <li
       onClick={handleViewClick}
       className={`${editing ? 'editing' : ''} ${
-        todo.completed ? 'completed' : ''
+        toDo.done ? 'completed' : ''
       }`}
     >
       <div className="view">
         <input
           type="checkbox"
           className="toggle"
-          checked={todo.completed}
-          onChange={onCompletion}
+          checked={toDo.done}
+          onChange={onCheckChange}
         />
         {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
-        <label>{todo.title}</label>
+        <label>{ description}</label>
         {/* eslint-disable-next-line jsx-a11y/control-has-associated-label */}
         <button type="button" className="destroy" onClick={onDelete} />
       </div>
       {editing && (
         <input
           className="edit"
-          value={modifiedTodo.title}
+          value={description}
           onChange={onNewValue}
           onKeyDown={onKeyDown}
           onBlur={onBlur}
@@ -98,4 +95,4 @@ function TodoItem({ todo, onUpdate }) {
   );
 }
 
-export default TodoItem;
+export default ToDoItem;

@@ -2,8 +2,11 @@ import React, { useContext, useState } from 'react';
 import { ErrorContext } from '../context/ErrorContext';
 import ToDoList from '../model/ToDoList';
 import ToDo from '../model/ToDo';
+import { ToDoListContext } from '../context/ToDoListContext';
 
-function SaveList({ toDoList }) {
+function SaveList() {
+  const toDoList = useContext(ToDoListContext);
+
   const errorCtx = useContext(ErrorContext);
   const [saved, setSaved] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -23,7 +26,7 @@ function SaveList({ toDoList }) {
     }
     const toDoListToSend = new ToDoList(
       toDoList.name,
-      toDoList.toDos.map((todo) => new ToDo(todo.title)),
+      toDoList.toDos.map((toDo) => new ToDo(toDo.id, toDo.description)),
     );
     const requestOptions = {
       method: 'POST',

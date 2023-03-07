@@ -1,15 +1,17 @@
 import React, { useContext, useState } from 'react';
 import { v4 as uuid } from 'uuid';
 import { ErrorContext } from '../context/ErrorContext';
+import { ToDoListContext } from '../context/ToDoListContext';
+import ToDo from '../model/ToDo';
 
-function SaveList({ toDos, onUpdate, setListName }) {
+function LoadList() {
+  const { setName, setToDos } = useContext(ToDoListContext);
+
   const errorCtx = useContext(ErrorContext);
-  const [name, setName] = useState('');
-  // eslint-disable-next-line no-unused-vars
   const [loading, setLoading] = useState(false);
   const [captureName, setCaptureName] = useState(false);
+  const [listToLoad, setListToLoad] = useState('');
 
-  // eslint-disable-next-line no-unused-vars
   function loadList(id) {
     const requestOptions = {
       method: 'GET',
@@ -23,27 +25,14 @@ function SaveList({ toDos, onUpdate, setListName }) {
         return response.json();
       })
       .then((data) => {
-        toDos.forEach((toDo) => {
-          onUpdate({ detail: { type: 'delete', id: toDo.id } });
-        });
-        setListName(data.name);
-        data.toDos.map(async (toDo) => {
-          console.log(toDo);
-          await onUpdate({
-            detail: {
-              type: 'add',
-              todo: {
-                id: uuid(),
-                title: toDo.description,
-                completed: false,
-              },
-            },
-          });
-        });
+        setName(data.name);
+        setToDos(data.toDos.map((it) => new ToDo(uuid(), it.description)));
         setLoading(false);
         setCaptureName(false);
       })
       .catch((err) => {
+        // eslint-disable-next-line no-console
+        console.error(err);
         setLoading(false);
         errorCtx.setError(err);
       });
@@ -51,7 +40,7 @@ function SaveList({ toDos, onUpdate, setListName }) {
 
   const handleKeyDown = (event) => {
     if (event.key === 'Enter') {
-      loadList(name);
+      loadList(listToLoad);
     }
   };
 
@@ -61,14 +50,14 @@ function SaveList({ toDos, onUpdate, setListName }) {
         <input
         /* eslint-disable-next-line jsx-a11y/no-autofocus */
           autoFocus
-          value={name}
-          onChange={(e) => setName(e.target.value)}
+          value={listToLoad}
+          onChange={(e) => setListToLoad(e.target.value)}
           onKeyDown={handleKeyDown}
         />
         <button
           onClick={() => {
             setCaptureName(false);
-            setName('');
+            setListToLoad('');
           }}
           data-testid="save-list"
           type="submit"
@@ -80,10 +69,8 @@ function SaveList({ toDos, onUpdate, setListName }) {
     );
   }
   return (
-
     <button onClick={() => setCaptureName(true)} data-testid="load-list" type="submit">load</button>
-
   );
 }
 
-export default SaveList;
+export default LoadList;

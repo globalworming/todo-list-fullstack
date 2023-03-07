@@ -1,5 +1,7 @@
 export default class ToDo {
-  constructor(description) {
-    this.description = description;
+  constructor(id, description) {
+    this.id = id;
+    this.description = description.trim();
+    this.done = false;
   }
 }

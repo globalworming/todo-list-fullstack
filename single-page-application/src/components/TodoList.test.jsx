@@ -5,19 +5,23 @@ import userEvent from '@testing-library/user-event';
 import { HashRouter } from 'react-router-dom';
 import { act } from 'react-dom/test-utils';
 import { rest } from 'msw';
+import { v4 as uuid } from 'uuid';
 import TodoList from './TodoList';
 import TodoListModel from '../model/ToDoList';
 import ErrorDisplayBoundary from '../context/ErrorContext';
 import server from '../setupTests';
 import ToDo from '../model/ToDo';
 import ShowsErrorFromContext from './ShowsErrorFromContext';
+import ToDoListBoundary from '../context/ToDoListContext';
 
 const user = userEvent.setup();
 const todoList = (
   <HashRouter>
     <ErrorDisplayBoundary>
       <ShowsErrorFromContext />
-      <TodoList match={{ params: [] }} />
+      <ToDoListBoundary>
+        <TodoList match={{ params: [] }} />
+      </ToDoListBoundary>
     </ErrorDisplayBoundary>
   </HashRouter>
 );
@@ -78,10 +82,10 @@ test('where we save a list', async () => {
   });
 });
 
-test.skip('where we load a list', async () => {
+test('where we load a list', async () => {
   server.use(
     rest.get(`${process.env.REACT_APP_GATEWAY}/toDoLists/my%20list`, (req, res, ctx) => res(ctx.status(200), ctx.json(
-      new TodoListModel('my list', [new ToDo('feed whale'), new ToDo('feed dog')]),
+      new TodoListModel('my list', [new ToDo(uuid(), 'feed whale'), new ToDo(uuid(), 'feed dog')]),
     ))),
   );
   render(todoList);
