@@ -17,7 +17,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --silent=false",
-    "test-ci": "CI=true react-scripts test --silent=false",
+    "test-ci": "CI=true JEST_JUNIT_CLASSNAME=\"{classname}\" JEST_JUNIT_TITLE=\"{title}\" JEST_JUNIT_ANCESTOR_SEPARATOR=\".\" react-scripts test --silent=false  --reporters=jest-junit",
     "eject": "react-scripts eject",
     "lint": "eslint .",
     "lint:fix": "eslint --fix ."
@@ -43,6 +43,7 @@
   },
   "devDependencies": {
     "cypress": "^12.5.1",
+    "jest-junit": "^15.0.0",
     "eslint": "^8.28.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-plugin-cypress": "^2.12.1",

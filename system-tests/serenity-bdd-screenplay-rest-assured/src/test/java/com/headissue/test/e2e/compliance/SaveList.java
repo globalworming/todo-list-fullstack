@@ -1,15 +1,11 @@
-package com.headissue.compliance.e2e.saveList;
+package com.headissue.test.e2e.compliance;
 
 import net.serenitybdd.junit5.SerenityJUnit5Extension;
 import net.serenitybdd.screenplay.Actor;
 import net.serenitybdd.screenplay.actors.Cast;
 import net.serenitybdd.screenplay.rest.abilities.CallAnApi;
-import net.serenitybdd.screenplay.rest.interactions.Get;
 import net.serenitybdd.screenplay.rest.interactions.Post;
 import org.hamcrest.CoreMatchers;
-import org.hamcrest.collection.IsIterableContainingInOrder;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -18,7 +14,7 @@ import java.util.UUID;
 import static net.serenitybdd.screenplay.rest.questions.ResponseConsequence.seeThatResponse;
 
 @ExtendWith(SerenityJUnit5Extension.class)
-class WhenSavingToDoList {
+class SaveList {
 
     Cast cast = Cast.whereEveryoneCan(CallAnApi.at("http://localhost:8080"));
 
@@ -27,8 +23,8 @@ class WhenSavingToDoList {
         Actor actor = cast.actorNamed("Olivian");
         actor.attemptsTo(new Post("/toDoLists")
                 .with(request -> request.header("Content-Type", "application/json")
-                .body("{name: 'some list', toDos: []}")
-        ));
+                        .body("{name: 'some list', toDos: []}")
+                ));
         actor.should(seeThatResponse("bad request", response -> response
                 .statusCode(400)
                 .body("errors[0].error", CoreMatchers.is("is empty"))
@@ -41,8 +37,8 @@ class WhenSavingToDoList {
         Actor actor = cast.actorNamed("Olivian");
         actor.attemptsTo(new Post("/toDoLists")
                 .with(request -> request.header("Content-Type", "application/json")
-                .body("{name: 'some list "+ UUID.randomUUID() +"', toDos: [{description: 'feed the cat'}]}")
-        ));
+                        .body("{name: 'some list " + UUID.randomUUID() + "', toDos: [{description: 'feed the cat'}]}")
+                ));
         actor.should(seeThatResponse("bad request", response -> response
                 .statusCode(200)
         ));

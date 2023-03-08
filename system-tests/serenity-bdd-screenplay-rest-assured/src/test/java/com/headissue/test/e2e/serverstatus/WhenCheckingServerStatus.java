@@ -1,4 +1,4 @@
-package com.headissue.compliance.e2e.serverstatus;
+package com.headissue.test.e2e.serverstatus;
 
 import net.serenitybdd.junit5.SerenityJUnit5Extension;
 import net.serenitybdd.screenplay.Actor;

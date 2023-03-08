@@ -1,4 +1,4 @@
-package starter.steps;
+package com.headissue.compliance.steps;
 
 import io.cucumber.java.Before;
 import io.cucumber.java.ParameterType;

@@ -21,18 +21,19 @@ shift $((OPTIND - 1))
 
 if $transmit; then
   echo "results will be pushed to BigQuery"
+  export report="$(realpath "report/build/libs/report-1.0-SNAPSHOT-all.jar")"
+  export branch="$(git branch --show-current)"
+
 fi
 
 build-reporting-lib() {
   (
     cd report
-      ./gradlew clean shadowJAR
+    ./gradlew clean shadowJAR
   )
 }
 
 unit-tests() {
-  report="$( realpath "report/build/libs/report-1.0-SNAPSHOT-all.jar")"
-  branch="$( git branch --show-current)"
   (
     cd bff
     ./gradlew clean test
@@ -45,13 +46,21 @@ unit-tests() {
   )
   (
     cd single-page-application
+    rm junit.xml || true
     npm run test-ci
-    npx cypress run --component
+    java -jar "$report" . -u "$USER" -b "$branch" -l local -s single-page-application -i isolated
+    rm cypress/TEST-*.xml || true
+    npx cypress run --component --reporter junit --reporter-options "mochaFile=cypress/TEST-[hash].xml,toConsole=true,includePending=true,jenkinsMode=true"
+    java -jar "$report" ./cypress -u "$USER" -b "$branch" -l local -s single-page-application -i isolated
   )
 }
 
 services-up() {
   docker compose -f docker-compose.local.yml up -d --build
+}
+
+services-down() {
+  docker compose -f docker-compose.local.yml down
 }
 
 wait-for-services() {
@@ -70,11 +79,13 @@ system-tests() {
   )
   (
     cd system-tests/serenity-bdd-screenplay-rest-assured
-    ./gradlew test
+    ./gradlew clean test
+    java -jar "$report" build/test-results/test -u "$USER" -b "$branch" -l local -s system -i integrated-mocked-3rd-party
   )
   (
     cd system-tests/serenity-bdd-cucumber
-    ./mvnw verify
+    ./mvnw clean verify
+    java -jar "$report" target/failsafe-reports -u "$USER" -b "$branch" -l local -s system -i integrated-mocked-3rd-party
   )
 }
 
@@ -82,8 +93,8 @@ if $transmit; then
   build-reporting-lib
 fi
 
-# FIXME ensure everything running on localhost 8080 etc is killed
 unit-tests
 services-up
 wait-for-services
 system-tests
+services-down

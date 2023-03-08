@@ -37,13 +37,6 @@ async function changeListNameTo(name) {
   await user.keyboard('{Enter}');
 }
 
-test('where we change the list name', async () => {
-  render(todoList);
-  expectListNameToBe('todos');
-  await changeListNameTo('my list');
-  expectListNameToBe('my list');
-});
-
 async function addToDos(...items) {
   const input = screen.getByPlaceholderText('What needs to be done?');
   expect(input).toBeInTheDocument();
@@ -55,50 +48,64 @@ async function addToDos(...items) {
   });
 }
 
-test('where we add todo items', async () => {
-  render(todoList);
-  await addToDos('feed cat', 'feed dog');
-  expect(screen.getByTestId('count')).toHaveTextContent('2 items left');
-});
-
-test('where we save a list', async () => {
-  server.use(
-    rest.post(`${process.env.REACT_APP_GATEWAY}/toDoLists`, async (req, res, ctx) => {
-      const json = await req.json();
-      if (json.name !== 'todos') {
-        return res(ctx.status(500), ctx.json({ message: 'bad request, wrong name' }));
-      }
-      if (json.toDos[0].description !== 'feed cat') {
-        return res(ctx.status(500), ctx.json({ message: 'bad request, wrong description' }));
-      }
-      return res(ctx.status(200));
-    }),
-  );
-  render(todoList);
-  await addToDos('feed cat', 'feed dog');
-  await user.click(screen.getByTestId('save-list'));
-  await waitFor(() => {
-    expect(screen.getByTestId('saved-list')).toBeInTheDocument();
+describe('compliance.ToDo List', () => {
+  describe('List Name', () => {
+    it('can be changed', async () => {
+      render(todoList);
+      expectListNameToBe('todos');
+      await changeListNameTo('my list');
+      expectListNameToBe('my list');
+    });
   });
-});
-
-test('where we load a list', async () => {
-  server.use(
-    rest.get(`${process.env.REACT_APP_GATEWAY}/toDoLists/my%20list`, (req, res, ctx) => res(ctx.status(200), ctx.json(
-      new TodoListModel('my list', [new ToDo(uuid(), 'feed whale'), new ToDo(uuid(), 'feed dog')]),
-    ))),
-  );
-  render(todoList);
-
-  await act(async () => {
-    await user.click(screen.getByTestId('load-list'));
-    await user.keyboard('my list');
-    await user.keyboard('{Enter}');
+  describe('ToDo Items', () => {
+    it('can be added', async () => {
+      render(todoList);
+      await addToDos('feed cat', 'feed dog');
+      expect(screen.getByTestId('count')).toHaveTextContent('2 items left');
+    });
   });
+  describe('Save List', () => {
+    it('can be added', async () => {
+      server.use(
+        rest.post(`${process.env.REACT_APP_GATEWAY}/toDoLists`, async (req, res, ctx) => {
+          const json = await req.json();
+          if (json.name !== 'todos') {
+            return res(ctx.status(500), ctx.json({ message: 'bad request, wrong name' }));
+          }
+          if (json.toDos[0].description !== 'feed cat') {
+            return res(ctx.status(500), ctx.json({ message: 'bad request, wrong description' }));
+          }
+          return res(ctx.status(200));
+        }),
+      );
+      render(todoList);
+      await addToDos('feed cat', 'feed dog');
+      await user.click(screen.getByTestId('save-list'));
+      await waitFor(() => {
+        expect(screen.getByTestId('saved-list')).toBeInTheDocument();
+      });
+    });
+  });
+  describe('Load List', () => {
+    it('ToDo Items can be loaded by name', async () => {
+      server.use(
+        rest.get(`${process.env.REACT_APP_GATEWAY}/toDoLists/my%20list`, (req, res, ctx) => res(ctx.status(200), ctx.json(
+          new TodoListModel('my list', [new ToDo(uuid(), 'feed whale'), new ToDo(uuid(), 'feed dog')]),
+        ))),
+      );
+      render(todoList);
 
-  await waitFor(() => {
-    expectListNameToBe('my list');
-    expect(screen.getByTestId('count')).toHaveTextContent('2 items left');
-    expect(screen.getByText('feed whale')).toBeInTheDocument();
+      await act(async () => {
+        await user.click(screen.getByTestId('load-list'));
+        await user.keyboard('my list');
+        await user.keyboard('{Enter}');
+      });
+
+      await waitFor(() => {
+        expectListNameToBe('my list');
+        expect(screen.getByTestId('count')).toHaveTextContent('2 items left');
+        expect(screen.getByText('feed whale')).toBeInTheDocument();
+      });
+    });
   });
 });

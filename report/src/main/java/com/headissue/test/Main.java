@@ -11,6 +11,7 @@ import javax.xml.parsers.DocumentBuilder;
 
 import com.google.cloud.Timestamp;
 import com.google.cloud.bigquery.*;
+import org.threeten.bp.DateTimeException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -28,7 +29,10 @@ public class Main {
 
             List<Path> xmlTestResults;
             try (Stream<Path> stream = Files.list(dir.toPath())) {
-                xmlTestResults = stream.filter(file -> file.getFileName().toString().endsWith(".xml")).collect(Collectors.toList());
+                xmlTestResults = stream
+                        .filter(path -> path.getFileName().toString().endsWith(".xml"))
+                        .filter(path -> path.getFileName().toString().startsWith("TEST-") || path.getFileName().toString().startsWith("junit") || path.getFileName().toString().startsWith("test-results"))
+                        .collect(Collectors.toList());
             }
 
             for (Path xmlTestResult : xmlTestResults) {
@@ -39,38 +43,54 @@ public class Main {
 
                 doc.getDocumentElement().normalize();
 
-                NodeList testcaseNodes = doc.getElementsByTagName("testcase");
+                NodeList testsuites = doc.getElementsByTagName("testsuite");
+                for (int k = 0; k < testsuites.getLength(); k++) {
+                    Element testsuite = (Element) doc.getElementsByTagName("testsuite").item(k);
+                    NodeList testcaseNodes = testsuite.getElementsByTagName("testcase");
 
 
-                for (int i = 0; i < testcaseNodes.getLength(); i++) {
-                    Element testcaseNode = (Element) testcaseNodes.item(i);
-                    String scenario = testcaseNode.getAttribute("name")
-                            .replaceAll("([a-z])([A-Z])", "$1 $2")
-                            .replace("()", "")
-                            .toLowerCase();
-                    List<String> classname = Arrays.stream(testcaseNode.getAttribute("classname").split("\\."))
-                            .toList();
-                    String feature = classname.get(classname.size() - 1)
-                            .replaceAll("Test$", "")
-                            .replaceAll("([a-z])([A-Z])", "$1 $2")
-                            .toLowerCase();
-                    String capability = classname.get(classname.size() - 2);
-                    String status = "success";
-                    if (testcaseNode.getElementsByTagName("failure").getLength() > 0) {
-                        status = "failure";
+                    for (int i = 0; i < testcaseNodes.getLength(); i++) {
+                        Element testcaseNode = (Element) testcaseNodes.item(i);
+                        String scenario = testcaseNode.getAttribute("name")
+                                .replaceAll("([a-z])([A-Z])", "$1 $2")
+                                .replace("()", "")
+                                .toLowerCase();
+                        List<String> classname = Arrays.stream(testsuite.getAttribute("name").split("\\."))
+                                .toList();
+                        String feature = classname.get(classname.size() - 1)
+                                .replaceAll("Test$", "")
+                                .replaceAll("([a-z])([A-Z])", "$1 $2")
+                                .toLowerCase();
+                        String capability = classname.get(classname.size() - 2);
+                        String status = "success";
+                        if (testcaseNode.getElementsByTagName("failure").getLength() > 0) {
+                            status = "failure";
+                        }
+                        if (testcaseNode.getElementsByTagName("error").getLength() > 0) {
+                            status = "error";
+                        }
+                        if (testcaseNode.getElementsByTagName("skipped").getLength() > 0) {
+                            status = "skipped";
+                        }
+
+                        String timestamp = testsuite.getAttribute("timestamp");
+
+                        Timestamp gcloudTimestamp;
+                        try {
+                            gcloudTimestamp = Timestamp.parseTimestamp(timestamp);
+                        } catch (DateTimeException e) {
+                            gcloudTimestamp = Timestamp.now();
+                        }
+                        TestResult testResult = new TestResult(
+                                capability, feature, scenario, status, arguments.user(), arguments.branch(), status, gcloudTimestamp, arguments.system(), arguments.location(), arguments.isolation()
+                        );
+                        System.out.println(testResult);
+                        results.add(testResult);
                     }
-                    if (testcaseNode.getElementsByTagName("skipped").getLength() > 0) {
-                        status = "skipped";
-                    }
 
-                    String timestamp = ((Element) doc.getElementsByTagName("testsuite").item(0)).getAttribute("timestamp");
-
-                    TestResult testResult = new TestResult(
-                            capability, feature, scenario, status, arguments.user(), arguments.branch(), status, Timestamp.parseTimestamp(timestamp), arguments.system(), arguments.location(), arguments.isolation()
-                    );
-                    System.out.println(testResult);
-                    results.add(testResult);
                 }
+
+
             }
 
 

@@ -42,7 +42,7 @@ serenity {
     reports = ["single-page-html"]
 
     // // Specify the root package of any JUnit acceptance tests
-    testRoot="com.headissue.compliance.e2e"
+    testRoot="com.headissue.test.e2e"
 }
 
 test.finalizedBy(aggregate)
