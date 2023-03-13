@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "456347b7-abfa-4614-88ed-37d684dd18e0",
+		"_postman_id": "3a0d88e0-fe40-4b0c-8152-b2099ed48134",
 		"name": "todo-fullstack",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -30,10 +30,10 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/health",
+					"raw": "http://{{host}}:8080/health",
 					"protocol": "http",
 					"host": [
-						"localhost"
+						"{{host}}"
 					],
 					"port": "8080",
 					"path": [
@@ -42,6 +42,57 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "save empty list",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('status is 400', function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"pm.test('error type', function () {",
+							"    const json = pm.response.json()",
+							"    pm.expect(json.type).to.equal(\"ValidationException\")",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"some list\",\n    \"toDos\": []\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{host}}:8080/toDoLists",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8080",
+					"path": [
+						"toDoLists"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "host",
+			"value": "localhost"
 		}
 	]
 }

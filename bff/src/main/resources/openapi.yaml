@@ -30,16 +30,79 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ServicesHealth'
-  /toDoList:
+  /toDoLists:
     post:
       tags:
         - ToDo List
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ToDoList'
+        required: true
       responses:
         '200':
           description: successful operation
-
+        '400':
+          description: bad request
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - $ref: '#/components/schemas/ClientError'
+                  - $ref: '#/components/schemas/ValidationError'
+  /toDoLists/{toDoListId}:
+    get:
+      tags:
+        - ToDo List
+      summary: Get list by id
+      parameters:
+        - name: toDoListId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ToDoList'
 components:
   schemas:
+    ClientError:
+      type: object
+      required:
+        - type
+        - message
+      properties:
+        type:
+          type: string
+          enum:
+            - JsonSyntaxException
+            - ValidationError
+        message:
+          type: string
+    ToDoList:
+      required:
+          - name
+          - toDos
+      type: object
+      properties:
+        name:
+          type: string
+        toDos:
+          type: array
+          items:
+            $ref: '#/components/schemas/ToDo'
+    ToDo:
+      required:
+          - description
+      type: object
+      properties:
+        description:
+          type: string
     ServicesHealth:
       required:
         - services
@@ -61,3 +124,32 @@ components:
         serving:
           type: boolean
           example: true
+    ValidationError:
+      type: object
+      required:
+        - type
+        - message
+        - errors
+      properties:
+        type:
+          type: string
+          enum:
+            - JsonSyntaxException
+            - ValidationError
+        message:
+          type: string
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/ValidationFieldError'
+    ValidationFieldError:
+      type: object
+      required:
+        - path
+        - error
+      properties:
+        path:
+          type: string
+        error:
+          type: string
+

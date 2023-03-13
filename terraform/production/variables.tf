@@ -2,10 +2,6 @@ variable "location" {
   type = string
 }
 
-variable "datastore_location" {
-  type = string
-}
-
 variable "project_id" {
   type = string
 }
@@ -22,3 +18,6 @@ variable "zone" {
   type = string
 }
 
+variable "deletion_protection" {
+  type = bool
+}

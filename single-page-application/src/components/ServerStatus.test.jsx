@@ -2,60 +2,55 @@ import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { rest } from 'msw';
-import { setupServer } from 'msw/node';
 import ServerStatus from './ServerStatus';
+import server from '../setupTests';
 
-const server = setupServer(
-  rest.get('/health', (req, res, ctx) => res(ctx.body(JSON.stringify({
-    services: [
-      { name: 'bff', serving: true },
-      { name: 'todo-service', serving: true },
-    ],
-  })))),
-);
+const healthUrl = `${process.env.REACT_APP_GATEWAY}/health`;
 
-beforeAll(() => server.listen());
-afterEach(() => server.resetHandlers());
-afterAll(() => server.close());
+describe('compliance.Server Status', () => {
+  describe('initial state', () => {
+    it('shows no data yet', async () => {
+      render(<ServerStatus url={healthUrl} />);
 
-test('initial render shows no data yet', async () => {
-  render(<ServerStatus url="/health" />);
-
-  expect(screen.getByRole('status')).toHaveTextContent('-');
-});
-
-test('server ok response shows ok', async () => {
-  render(<ServerStatus url="/health" />);
-
-  await waitFor(() => {
-    expect(screen.getByRole('status')).toHaveTextContent('ok');
+      expect(screen.getByRole('status')).toHaveTextContent('-');
+    });
   });
-});
+  describe('ok response', () => {
+    it('shows ok', async () => {
+      render(<ServerStatus url={healthUrl} />);
 
-test('connection error shows not connected', async () => {
-  server.use(
-    rest.get('/health', (req, res, ctx) => res(ctx.status(500))),
-  );
-  render(<ServerStatus url="/health" />);
-
-  await waitFor(() => {
-    expect(screen.getByRole('status')).toHaveTextContent('disconnected');
+      await waitFor(() => {
+        expect(screen.getByRole('status')).toHaveTextContent('ok');
+      });
+    });
   });
-});
 
-test('service error shows error', async () => {
-  server.use(
-    rest.get('/health', (req, res, ctx) => res(ctx.body(JSON.stringify({
-      services: [
-        { name: 'bff', serving: true },
-        { name: 'todo-service', serving: false },
-      ],
-    })))),
-  );
-  render(<ServerStatus url="/health" />);
+  describe('errors', () => {
+    it('connection error shows not connected', async () => {
+      server.use(
+        rest.get(healthUrl, (req, res, ctx) => res(ctx.status(500))),
+      );
+      render(<ServerStatus url={healthUrl} />);
 
-  await waitFor(() => {
-    expect(screen.getByRole('status')).toHaveTextContent('bff ok');
-    expect(screen.getByRole('status')).toHaveTextContent('todo-service error');
+      await waitFor(() => {
+        expect(screen.getByRole('status')).toHaveTextContent('disconnected');
+      });
+    });
+    it('service error shows error', async () => {
+      server.use(
+        rest.get(healthUrl, (req, res, ctx) => res(ctx.body(JSON.stringify({
+          services: [
+            { name: 'bff', serving: true },
+            { name: 'todo-service', serving: false },
+          ],
+        })))),
+      );
+      render(<ServerStatus url={healthUrl} />);
+
+      await waitFor(() => {
+        expect(screen.getByRole('status')).toHaveTextContent('bff ok');
+        expect(screen.getByRole('status')).toHaveTextContent('todo-service error');
+      });
+    });
   });
 });

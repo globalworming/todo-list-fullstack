@@ -1,0 +1,28 @@
+version: "3"
+services:
+  bff:
+    container_name: bff
+    build:
+      context: .
+      dockerfile: bff/Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      GOOGLE_CLOUD_PROJECT: "life-compliance"
+      TODO_SERVICE_HOST: "todo-service:8081"
+      STAGE: "local"
+  todo-service:
+    container_name: todo-service
+    build:
+      context: .
+      dockerfile: todo-service/Dockerfile
+    environment:
+      GOOGLE_CLOUD_PROJECT: "life-compliance"
+      PORT: 8081
+      MOCK_DATASTORE: "true"
+
+
+networks:
+  default:
+    external:
+      name: cloudbuild

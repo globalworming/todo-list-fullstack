@@ -1,8 +1,10 @@
 {
   "scripts": {
-    "test": "newman run todo-fullstack.postman_collection.json"
+    "test": "newman run todo-fullstack.postman_collection.json -e local.postman_environment.json",
+    "test-ci": "newman run todo-fullstack.postman_collection.json -e ci.postman_environment.json"
   },
   "dependencies": {
-    "newman": "^5.3.2"
+    "newman": "^5.3.2",
+    "test": "^3.2.1"
   }
 }

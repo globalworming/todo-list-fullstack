@@ -1,0 +1,39 @@
+steps:
+  - name: docker/compose
+    args:
+      - '-f'
+      - docker-compose.ci.yml
+      - up
+      - '-d'
+    id: compose-up
+  - name: gcr.io/cloud-builders/gcloud
+    args:
+      - '-c'
+      - |
+        bash ./wait-for-it.sh -t 300 bff:8080 -s -- echo 'ok'
+    id: wait
+    entrypoint: bash
+  - name: gcr.io/cloud-builders/npm
+    args:
+      - install
+    dir: system-tests/postman
+    id: install
+    waitFor:
+      - wait
+    entrypoint: npm
+  - name: gcr.io/cloud-builders/npm
+    args:
+      - test-ci
+    dir: system-tests/postman
+    id: postman
+    waitFor:
+      - install
+    entrypoint: npm
+  - name: docker/compose
+    args:
+      - '-f'
+      - docker-compose.ci.yml
+      - down
+    id: compose-down
+    waitFor:
+      - postman

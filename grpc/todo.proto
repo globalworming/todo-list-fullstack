@@ -4,11 +4,16 @@ package com.headissue.compliance.todo.v1;
 
 service ToDoService {
   rpc WriteList(ToDoList) returns (WriteListResult);
+  rpc ReadList(ToDoListRequest) returns (ToDoList);
 }
 
 message ToDoList {
-  string id = 1;
+  string name = 1;
   repeated ToDo toDos = 2;
+}
+
+message ToDoListRequest {
+  string id = 1;
 }
 
 message ToDo {

@@ -97,7 +97,7 @@ module "todo-service" {
 # for persistence a firestore db
 resource "google_app_engine_application" "datastore" {
   project       = var.project_id
-  location_id   = var.datastore_location
+  location_id   = var.location
   database_type = "CLOUD_DATASTORE_COMPATIBILITY"
 }
 # allow todo-service to access datastore
@@ -105,4 +105,71 @@ resource "google_project_iam_member" "datastore_user" {
   project = var.project_id
   role    = "roles/datastore.user"
   member  = "serviceAccount:${local.compute_service_account}"
+}
+
+resource "google_bigquery_dataset" "test_results_dataset" {
+  dataset_id                  = "test_results"
+  friendly_name               = ""
+  description                 = ""
+  location                    = var.location
+}
+
+resource "google_bigquery_table" "test_results_table" {
+  dataset_id = google_bigquery_dataset.test_results_dataset.dataset_id
+  table_id   = "results"
+  schema = <<EOF
+[
+  {
+    "name": "capability",
+    "type": "STRING",
+    "mode": "REQUIRED"
+  },
+  {
+    "name": "feature",
+    "type": "STRING",
+    "mode": "REQUIRED"
+  },
+  {
+    "name": "scenario",
+    "type": "STRING",
+    "mode": "REQUIRED"
+  },
+  {
+    "name": "result",
+    "type": "STRING",
+    "mode": "REQUIRED"
+  },
+  {
+    "name": "timestamp",
+    "type": "TIMESTAMP",
+    "mode": "REQUIRED"
+  },
+  {
+    "name": "user",
+    "type": "STRING",
+    "mode": "REQUIRED"
+  },
+  {
+    "name": "branch",
+    "type": "STRING",
+    "mode": "REQUIRED"
+  },
+  {
+    "name": "isolation",
+    "type": "String",
+    "mode": "REQUIRED"
+  },
+  {
+    "name": "location",
+    "type": "String",
+    "mode": "REQUIRED"
+  },
+  {
+    "name": "system",
+    "type": "String",
+    "mode": "REQUIRED"
+  }
+
+]
+EOF
 }
