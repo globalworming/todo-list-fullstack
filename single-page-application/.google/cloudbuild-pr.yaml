@@ -16,11 +16,9 @@ steps:
     name: node:19.1.0-alpine3.16
     dir: single-page-application
     entrypoint: npm
-    env:
-      - "CI=true"
     args:
       - run
-      - test
+      - test-ci
   - id: cypress test
     name: node:19.1.0-alpine3.16
     dir: single-page-application
