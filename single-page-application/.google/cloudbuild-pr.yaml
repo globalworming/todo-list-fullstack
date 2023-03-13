@@ -20,7 +20,7 @@ steps:
       - run
       - test-ci
   - id: cypress test
-    name: node:19.1.0-alpine3.16
+    name: cypress/browsers:node18.12.0-chrome107
     dir: single-page-application
     entrypoint: npx
     args:
