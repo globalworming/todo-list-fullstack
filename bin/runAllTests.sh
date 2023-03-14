@@ -1,4 +1,4 @@
-set -xe
+set -x
 
 cd "$(dirname "$0")/.."
 
@@ -7,6 +7,7 @@ transmit=false
 
 # process arguments
 while getopts ":t" o; do
+  # FIXME add parameter to run all (?) tests against production
   case "${o}" in
   t)
     transmit=true
@@ -33,25 +34,31 @@ build-reporting-lib() {
   )
 }
 
+report-results() {
+  if $transmit; then
+    java -jar "$report" -u "$USER" -b "$branch" "$@"
+  fi
+}
+
 unit-tests() {
   (
     cd bff
     ./gradlew clean test
-    java -jar "$report" build/test-results/test -u "$USER" -b "$branch" -l local -s bff -i isolated
+    report-results build/test-results/test -l local -s bff -i isolated
   )
   (
     cd todo-service
     ./gradlew clean test
-    java -jar "$report" build/test-results/test -u "$USER" -b "$branch" -l local -s todo-service -i isolated
+    report-results build/test-results/test -l local -s todo-service -i isolated
   )
   (
     cd single-page-application
     rm junit.xml || true
     npm run test-ci
-    java -jar "$report" . -u "$USER" -b "$branch" -l local -s single-page-application -i isolated
+    report-results . -l local -s single-page-application -i isolated
     rm cypress/TEST-*.xml || true
     npx cypress run --component --reporter junit --reporter-options "mochaFile=cypress/TEST-[hash].xml,toConsole=true,includePending=true,jenkinsMode=true"
-    java -jar "$report" ./cypress -u "$USER" -b "$branch" -l local -s single-page-application -i isolated
+    report-results ./cypress -l local -s single-page-application -i isolated
   )
 }
 
@@ -71,7 +78,9 @@ wait-for-services() {
 system-tests() {
   (
     cd system-tests/postman
-    npm run test
+    rm newman/*.xml || true
+    npm run test-ci
+    report-results ./newman -l local -s system -i integrated-mocked-3rd-party
   )
   (
     cd system-tests/supertest
@@ -80,12 +89,12 @@ system-tests() {
   (
     cd system-tests/serenity-bdd-screenplay-rest-assured
     ./gradlew clean test
-    java -jar "$report" build/test-results/test -u "$USER" -b "$branch" -l local -s system -i integrated-mocked-3rd-party
+    report-results build/test-results/test -l local -s system -i integrated-mocked-3rd-party
   )
   (
     cd system-tests/serenity-bdd-cucumber
     ./mvnw clean verify
-    java -jar "$report" target/failsafe-reports -u "$USER" -b "$branch" -l local -s system -i integrated-mocked-3rd-party
+    report-results target/failsafe-reports -l local -s system -i integrated-mocked-3rd-party
   )
 }
 

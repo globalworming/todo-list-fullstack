@@ -31,7 +31,7 @@ public class Main {
             try (Stream<Path> stream = Files.list(dir.toPath())) {
                 xmlTestResults = stream
                         .filter(path -> path.getFileName().toString().endsWith(".xml"))
-                        .filter(path -> path.getFileName().toString().startsWith("TEST-") || path.getFileName().toString().startsWith("junit") || path.getFileName().toString().startsWith("test-results"))
+                        .filter(path -> path.getFileName().toString().startsWith("TEST-") || path.getFileName().toString().startsWith("junit") || path.getFileName().toString().startsWith("test-results") || path.getFileName().toString().startsWith("newman-run-report"))
                         .collect(Collectors.toList());
             }
 
@@ -55,8 +55,15 @@ public class Main {
                                 .replaceAll("([a-z])([A-Z])", "$1 $2")
                                 .replace("()", "")
                                 .toLowerCase();
-                        List<String> classname = Arrays.stream(testsuite.getAttribute("name").split("\\."))
+                        String name = testsuite.getAttribute("name");
+                        if (testsuite.getAttribute("package").length() > 0) {
+                            name = testsuite.getAttribute("package");
+                        }
+                        List<String> classname = Arrays.stream(name.split("\\."))
                                 .toList();
+                        if (classname.size() == 1 && classname.get(0).contains(" / ")) {
+                            classname = Arrays.stream(classname.get(0).split(" \\/ ")).toList();
+                        }
                         String feature = classname.get(classname.size() - 1)
                                 .replaceAll("Test$", "")
                                 .replaceAll("([a-z])([A-Z])", "$1 $2")

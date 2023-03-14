@@ -6,87 +6,107 @@
 	},
 	"item": [
 		{
-			"name": "health",
-			"event": [
+			"name": "compliance",
+			"item": [
 				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test('bff is serving', function () {",
-							"    const json = pm.response.json()",
-							"    pm.expect(json.services.find(it => it.name==='bff').serving).to.equal(true)",
-							"});",
-							"",
-							"pm.test('todo is serving', function () {",
-							"    const json = pm.response.json()",
-							"    pm.expect(json.services.find(it => it.name==='todo').serving).to.equal(true)",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "http://{{host}}:8080/health",
-					"protocol": "http",
-					"host": [
-						"{{host}}"
-					],
-					"port": "8080",
-					"path": [
-						"health"
+					"name": "save list",
+					"item": [
+						{
+							"name": "save empty list",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('status is 400', function () {",
+											"    pm.response.to.have.status(400);",
+											"});",
+											"pm.test('error type', function () {",
+											"    const json = pm.response.json()",
+											"    pm.expect(json.type).to.equal(\"ValidationException\")",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"some list\",\n    \"toDos\": []\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{host}}:8080/toDoLists",
+									"protocol": "http",
+									"host": [
+										"{{host}}"
+									],
+									"port": "8080",
+									"path": [
+										"toDoLists"
+									]
+								}
+							},
+							"response": []
+						}
 					]
 				}
-			},
-			"response": []
+			]
 		},
 		{
-			"name": "save empty list",
-			"event": [
+			"name": "server status",
+			"item": [
 				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test('status is 400', function () {",
-							"    pm.response.to.have.status(400);",
-							"});",
-							"pm.test('error type', function () {",
-							"    const json = pm.response.json()",
-							"    pm.expect(json.type).to.equal(\"ValidationException\")",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"name\": \"some list\",\n    \"toDos\": []\n}",
-					"options": {
-						"raw": {
-							"language": "json"
+					"name": "health",
+					"item": [
+						{
+							"name": "health",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('bff is serving', function () {",
+											"    const json = pm.response.json()",
+											"    pm.expect(json.services.find(it => it.name==='bff').serving).to.equal(true)",
+											"});",
+											"",
+											"pm.test('todo is serving', function () {",
+											"    const json = pm.response.json()",
+											"    pm.expect(json.services.find(it => it.name==='todo').serving).to.equal(true)",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://{{host}}:8080/health",
+									"protocol": "http",
+									"host": [
+										"{{host}}"
+									],
+									"port": "8080",
+									"path": [
+										"health"
+									]
+								}
+							},
+							"response": []
 						}
-					}
-				},
-				"url": {
-					"raw": "http://{{host}}:8080/toDoLists",
-					"protocol": "http",
-					"host": [
-						"{{host}}"
-					],
-					"port": "8080",
-					"path": [
-						"toDoLists"
 					]
 				}
-			},
-			"response": []
+			]
 		}
 	],
 	"variable": [
