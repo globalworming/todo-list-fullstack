@@ -107,6 +107,7 @@ resource "google_project_iam_member" "datastore_user" {
   member  = "serviceAccount:${local.compute_service_account}"
 }
 
+### START bigquery
 resource "google_bigquery_dataset" "test_results_dataset" {
   dataset_id                  = "test_results"
   friendly_name               = ""
@@ -172,4 +173,14 @@ resource "google_bigquery_table" "test_results_table" {
 
 ]
 EOF
+}
+### END bigquery
+
+
+resource "google_monitoring_notification_channel" "alert_notifications" {
+  display_name = "alerts"
+  type         = "email"
+  labels = {
+    email_address = var.notification_email
+  }
 }

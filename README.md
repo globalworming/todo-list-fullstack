@@ -43,6 +43,7 @@ UpdateLayoutConfig($c4ShapeInRow="2", $c4BoundaryInRow="2")
 * go to `/terraform/production` and create a `terraform.tfvars` file, replace values with yours: 
 ``` 
 location = "europe-west1"
+notification_email = "email@example.com"
 project_id= ${gcp_project_id}
 repo_name = "todo-list-fullstack"
 repo_owner = ${gihub_username}
@@ -52,3 +53,4 @@ zone = "europe-west1-d"
 * `Error creating Trigger: googleapi: Error 400: Repository mapping does not exist. Please visit https://console.cloud.google.com/cloud-build/triggers/connect?project=... to connect a repository to your project` do that
 * some images are not present yet, so you have to run all the deployment triggers to have the image built
 * change and commit/push [.env](single-page-application/.env) to your actual bff url (go to cloud run to find it) FIXME, should be automatic
+* Configure Error Reporting notifications by [going to the console](https://console.cloud.google.com/errors) and clicking "Configure Notifications". Unfortunately, [we're unable to automate this](https://github.com/hashicorp/terraform-provider-google/issues/12068).
