@@ -14,7 +14,8 @@
     </appender>
 
     <root level="info">
-        <appender-ref ref="CLOUD" />
+        <!-- disable because throws java.lang.IllegalAccessException: class io.grpc.netty.shaded.io.netty.util.internal.PlatformDependent0$7 cannot access class jdk.internal.misc.Unsafe (in module java.base) because module java.base does not export jdk.internal.misc to unnamed module @1e965684 -->
+        <!--appender-ref ref="CLOUD" /-->
         <appender-ref ref="STDOUT" />
     </root>
 </configuration>

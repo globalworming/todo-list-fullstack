@@ -11,4 +11,4 @@ RUN gradle assemble --no-daemon
 FROM openjdk:17-jdk-slim
 COPY --from=gradle /home/app/build/libs/*-all.jar app.jar
 EXPOSE 8080
-CMD java -noverify -jar app.jar --add-exports java.base/jdk.internal.misc=ALL-UNNAMED -Dio.netty.tryReflectionSetAccessible=true
+CMD java -noverify -jar app.jar
