@@ -3,7 +3,7 @@ import request from 'supertest';
 
 describe('checking backend health', () => {
   it('responds with ok', (done) => {
-    request('http://localhost:8080')
+    request(process.env.HOST)
       .get('/health')
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)

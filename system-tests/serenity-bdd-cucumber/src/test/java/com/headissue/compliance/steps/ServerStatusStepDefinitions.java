@@ -1,5 +1,6 @@
 package com.headissue.compliance.steps;
 
+import com.headissue.compliance.Host;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import net.serenitybdd.screenplay.Actor;
@@ -14,7 +15,7 @@ public class ServerStatusStepDefinitions {
 
     @When("{actor} checks the server status")
     public void checkTheServerStatus(Actor actor) {
-        actor.attemptsTo(Open.url("http://localhost:3000"));
+        actor.attemptsTo(Open.url(Host.getUrl()));
     }
 
     @Then("{actor} should see that the server {string} shows status {string}")

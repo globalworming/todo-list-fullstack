@@ -4,7 +4,7 @@ import { createExampleList, thenSeeErrorWhenCreatingListWithSameName } from '../
 
 describe('saving a todo list', () => {
   it('responds with "Bad Request" when list is empty', (done) => {
-    request('localhost:8080')
+    request(process.env.HOST)
       .post('/toDoLists')
       .send({
         name: 'some list',
@@ -20,7 +20,7 @@ describe('saving a todo list', () => {
   });
 
   it('responds ok when list is created successfully', (done) => {
-    request('localhost:8080')
+    request(process.env.HOST)
       .post('/toDoLists')
       .send({
         name: `some list ${Date.now()}`,

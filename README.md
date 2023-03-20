@@ -54,3 +54,4 @@ zone = "europe-west1-d"
 * some images are not present yet, so you have to run all the deployment triggers to have the image built
 * change and commit/push [.env](single-page-application/.env) to your actual bff url (go to cloud run to find it) FIXME, should be automatic
 * Configure Error Reporting notifications by [going to the console](https://console.cloud.google.com/errors) and clicking "Configure Notifications". Unfortunately, [we're unable to automate this](https://github.com/hashicorp/terraform-provider-google/issues/12068).
+* set error notification channel https://console.cloud.google.com/errors

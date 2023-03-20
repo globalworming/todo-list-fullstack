@@ -6,7 +6,8 @@
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "test": "react-scripts test e2e",
-    "test-ci": "CI=true JEST_JUNIT_CLASSNAME=\"{classname}\" JEST_JUNIT_TITLE=\"{title}\" JEST_JUNIT_ANCESTOR_SEPARATOR=\".\" react-scripts test e2e --silent=false  --reporters=jest-junit --reporters=default"
+    "test-local": "CI=true HOST=http://localhost:8080 JEST_JUNIT_CLASSNAME=\"{classname}\" JEST_JUNIT_TITLE=\"{title}\" JEST_JUNIT_ANCESTOR_SEPARATOR=\".\" react-scripts test e2e --silent=false  --reporters=jest-junit --reporters=default",
+    "test-prod": "CI=true HOST=https://bff-fg5blhx72q-ey.a.run.app JEST_JUNIT_CLASSNAME=\"{classname}\" JEST_JUNIT_TITLE=\"{title}\" JEST_JUNIT_ANCESTOR_SEPARATOR=\".\" react-scripts test e2e --silent=false  --reporters=jest-junit --reporters=default"
   },
   "dependencies": {
     "react-scripts": "5.0.0"

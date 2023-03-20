@@ -1,5 +1,6 @@
 package com.headissue.test.e2e.compliance;
 
+import com.headissue.test.domain.Host;
 import net.serenitybdd.junit5.SerenityJUnit5Extension;
 import net.serenitybdd.screenplay.Actor;
 import net.serenitybdd.screenplay.actors.Cast;
@@ -16,7 +17,7 @@ import static net.serenitybdd.screenplay.rest.questions.ResponseConsequence.seeT
 @ExtendWith(SerenityJUnit5Extension.class)
 class SaveList {
 
-    Cast cast = Cast.whereEveryoneCan(CallAnApi.at("http://localhost:8080"));
+    Cast cast = Cast.whereEveryoneCan(CallAnApi.at(Host.getUrl()));
 
     @Test
     void whereListIsEmpty() {

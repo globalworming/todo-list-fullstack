@@ -2,7 +2,7 @@ import request from 'supertest';
 import assert from 'assert';
 
 export async function createExampleList(name) {
-  await request('localhost:8080')
+  await request(process.env.HOST)
     .post('/toDoLists')
     .send({
       name,
@@ -14,7 +14,7 @@ export async function createExampleList(name) {
 }
 
 export function thenSeeErrorWhenCreatingListWithSameName(randomName) {
-  return request('localhost:8080')
+  return request(process.env.HOST)
     .post('/toDoLists')
     .send({
       name: randomName,
