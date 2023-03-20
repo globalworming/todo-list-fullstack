@@ -12,7 +12,7 @@ public class ChannelFactory {
         } else {
             host = host.replace("https://", "");
         }
-        if (host.startsWith("localhost") || stage.equals("local")) {
+        if (host.startsWith("localhost") || "local".equals(stage)) {
             return plainTextChannel(host).build();
         } else {
             return tlsChannel(host).build();
