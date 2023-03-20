@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "test": "newman run todo-fullstack.postman_collection.json -e local.postman_environment.json",
+    "test": "newman run todo-fullstack.postman_collection.json -e local.postman_environment.json --reporters junitfull",
     "test-ci": "newman run todo-fullstack.postman_collection.json -e ci.postman_environment.json --reporters junitfull"
   },
   "dependencies": {

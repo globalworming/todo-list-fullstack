@@ -1,3 +1,5 @@
+#!/bin/bash
+
 set -x
 
 cd "$(dirname "$0")/.."
@@ -44,21 +46,21 @@ unit-tests() {
   (
     cd bff
     ./gradlew clean test
-    report-results build/test-results/test -l local -s bff -i isolated
+    report-results build/test-results/test -l local -s bff -i isolated --src bff-unit-tests
   )
   (
     cd todo-service
     ./gradlew clean test
-    report-results build/test-results/test -l local -s todo-service -i isolated
+    report-results build/test-results/test -l local -s todo-service -i isolated --src todo-service-unit-tests
   )
   (
     cd single-page-application
     rm junit.xml || true
     npm run test-ci
-    report-results . -l local -s single-page-application -i isolated
+    report-results . -l local -s single-page-application -i isolated --src single-page-application-component-tests
     rm cypress/TEST-*.xml || true
     npx cypress run --component --reporter junit --reporter-options "mochaFile=cypress/TEST-[hash].xml,toConsole=true,includePending=true,jenkinsMode=true"
-    report-results ./cypress -l local -s single-page-application -i isolated
+    report-results ./cypress -l local -s single-page-application -i isolated --src single-page-application-cypress-component-tests
   )
 }
 
@@ -75,27 +77,44 @@ wait-for-services() {
   ./bin/wait-for-it.sh localhost:8080
 }
 
-system-tests() {
-  (
-    cd system-tests/postman
-    rm newman/*.xml || true
-    npm run test-ci
-    report-results ./newman -l local -s system -i integrated-mocked-3rd-party
-  )
+supertest() {
   (
     cd system-tests/supertest
     npm run test-ci
+    report-results . -l local -s system -i integrated-mocked-3rd-party --src supertest-tests
   )
+}
+
+postman() {
+  (
+    cd system-tests/postman
+    rm newman/*.xml || true
+    npm run test
+    report-results ./newman -l local -s system -i integrated-mocked-3rd-party --src postman-collection
+  )
+}
+
+serenity-rest-assured() {
   (
     cd system-tests/serenity-bdd-screenplay-rest-assured
     ./gradlew clean test
-    report-results build/test-results/test -l local -s system -i integrated-mocked-3rd-party
+    report-results build/test-results/test -l local -s system -i integrated-mocked-3rd-party --src serenity-rest-assured-tests
   )
+}
+
+serenity-cucumber-browser() {
   (
     cd system-tests/serenity-bdd-cucumber
     ./mvnw clean verify
-    report-results target/failsafe-reports -l local -s system -i integrated-mocked-3rd-party
+    report-results target/failsafe-reports -l local -s system -i integrated-mocked-3rd-party --src serenity-cucumber-browser-tests
   )
+}
+
+system-tests() {
+  postman
+  supertest
+  serenity-rest-assured
+  serenity-cucumber-browser
 }
 
 if $transmit; then

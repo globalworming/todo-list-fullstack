@@ -169,6 +169,11 @@ resource "google_bigquery_table" "test_results_table" {
     "name": "system",
     "type": "String",
     "mode": "REQUIRED"
+  },
+  {
+    "name": "source",
+    "type": "String",
+    "mode": "REQUIRED"
   }
 
 ]

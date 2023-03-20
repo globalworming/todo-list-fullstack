@@ -13,5 +13,6 @@ public record TestResult(
         Timestamp timestamp,
         String system,
         String location,
-        String isolation) {
+        String isolation,
+        String source) {
 }

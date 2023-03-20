@@ -89,7 +89,7 @@ public class Main {
                             gcloudTimestamp = Timestamp.now();
                         }
                         TestResult testResult = new TestResult(
-                                capability, feature, scenario, status, arguments.user(), arguments.branch(), status, gcloudTimestamp, arguments.system(), arguments.location(), arguments.isolation()
+                                capability, feature, scenario, status, arguments.user(), arguments.branch(), status, gcloudTimestamp, arguments.system(), arguments.location(), arguments.isolation(), arguments.source()
                         );
                         System.out.println(testResult);
                         results.add(testResult);
@@ -125,6 +125,7 @@ public class Main {
                 rowContent.put("system", testResult.system());
                 rowContent.put("isolation", testResult.isolation());
                 rowContent.put("location", testResult.location());
+                rowContent.put("source", testResult.source());
                 request.addRow(rowContent);
             });
 
@@ -148,6 +149,7 @@ public class Main {
         String system = null;
         String location = null;
         String isolation = null;
+        String source = null;
         File dir = null;
         for (int i = 0; i < args.length; i++) {
             String arg = args[i];
@@ -172,10 +174,14 @@ public class Main {
                     branch = args[i + 1];
                     i++;
                 }
+                case "--src" -> {
+                    source = args[i + 1];
+                    i++;
+                }
                 default -> dir = new File(arg);
             }
         }
 
-        return new Arguments(branch, user, system, location, isolation, dir);
+        return new Arguments(branch, user, system, location, isolation, dir, source);
     }
 }
