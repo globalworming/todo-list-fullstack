@@ -18,7 +18,7 @@ import org.w3c.dom.NodeList;
 
 
 public class Main {
-    private static final BigQuery bigquery = BigQueryOptions.getDefaultInstance().getService();
+    private static boolean transmit = false;
 
     public static void main(String[] args) {
         try {
@@ -100,14 +100,17 @@ public class Main {
 
             }
 
-
-            pushToBigQuery(results);
+            if (transmit) {
+                pushToBigQuery(results);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     private static void pushToBigQuery(List<TestResult> testResults) {
+        BigQuery bigquery = BigQueryOptions.getDefaultInstance().getService();
+
         try {
 
             TableId tableId = TableId.of("test_results", "results");
@@ -154,6 +157,10 @@ public class Main {
         for (int i = 0; i < args.length; i++) {
             String arg = args[i];
             switch (arg) {
+                case "-t" -> {
+                    transmit = Boolean.parseBoolean(args[i + 1]);
+                    i++;
+                }
                 case "-u" -> {
                     user = args[i + 1];
                     i++;

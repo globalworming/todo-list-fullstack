@@ -3,6 +3,10 @@
 set -x
 
 cd "$(dirname "$0")/.."
+root=$(pwd)
+out=$(realpath out/"$(date "+%Y%m%d-%H%M%S")"-runAllTests.log)
+report=$root/report/build/libs/report-1.0-SNAPSHOT-all.jar
+branch="$(git branch --show-current)"
 
 stage="local"
 # pass results to bigquery
@@ -27,37 +31,41 @@ done
 shift $((OPTIND - 1))
 
 build-reporting-lib() {
-  (
-    cd report
-    ./gradlew clean shadowJAR
-  )
+  if ! test -f "$report"; then
+    (
+      cd report
+      ./gradlew clean shadowJAR
+    )
+  fi
 }
 
 report-results() {
-  if $transmit; then
-    java -jar "$report" -u "$USER" -b "$branch" "$@"
-  fi
+  java -jar "$report" -u "$USER" -b "$branch" -t $transmit "$@"
+}
+
+tee-to-out() {
+  tee -a $out
 }
 
 unit-tests() {
   (
     cd bff
-    ./gradlew clean test
-    report-results build/test-results/test -l local -s bff -i isolated --src bff-unit-tests
+    ./gradlew clean test | tee-to-out
+    report-results build/test-results/test -l local -s bff -i isolated --src bff-unit-tests | tee-to-out
   )
   (
     cd todo-service
-    ./gradlew clean test
-    report-results build/test-results/test -l local -s todo-service -i isolated --src todo-service-unit-tests
+    ./gradlew clean test | tee-to-out
+    report-results build/test-results/test -l local -s todo-service -i isolated --src todo-service-unit-tests | tee-to-out
   )
   (
     cd single-page-application
     rm junit.xml || true
-    npm run test-ci
-    report-results . -l local -s single-page-application -i isolated --src single-page-application-component-tests
+    npm run test-ci | tee-to-out
+    report-results . -l local -s single-page-application -i isolated --src single-page-application-component-tests | tee-to-out
     rm cypress/TEST-*.xml || true
-    npx cypress run --component --reporter junit --reporter-options "mochaFile=cypress/TEST-[hash].xml,toConsole=true,includePending=true,jenkinsMode=true"
-    report-results ./cypress -l local -s single-page-application -i isolated --src single-page-application-cypress-component-tests
+    npx cypress run --component --reporter junit --reporter-options "mochaFile=cypress/TEST-[hash].xml,toConsole=true,includePending=true,jenkinsMode=true" | tee-to-out
+    report-results ./cypress -l local -s single-page-application -i isolated --src single-page-application-cypress-component-tests | tee-to-out
   )
 }
 
@@ -123,7 +131,7 @@ serenity-cucumber-browser() {
   (
     cd system-tests/serenity-bdd-cucumber
     if test "$stage" = "local"; then
-    ./mvnw clean verify -DHOST=http://localhost:3000
+      ./mvnw clean verify -DHOST=http://localhost:3000
     fi
     if test "$stage" = "prod"; then
       ./mvnw clean verify -DHOST=https://single-page-application-fg5blhx72q-ey.a.run.app/
@@ -139,12 +147,8 @@ system-tests() {
   serenity-cucumber-browser
 }
 
-if $transmit; then
-  build-reporting-lib
-  echo "results will be pushed to BigQuery"
-  export report="$(realpath "report/build/libs/report-1.0-SNAPSHOT-all.jar")"
-  export branch="$(git branch --show-current)"
-fi
+
+build-reporting-lib
 
 if test "$stage" = "local"; then
   unit-tests
@@ -158,3 +162,6 @@ else
   echo "unsupported stage: $stage"
   exit 1
 fi
+
+RED='\033[0;31m'
+cat "$out" | grep "TestResult" | grep -vE "success|skipped" | xargs echo -e $RED
