@@ -5,7 +5,8 @@
     "prettier": "2.8.7"
   },
   "scripts": {
-    "test": "CUSTOM_URL=https://single-page-application-fg5blhx72q-ey.a.run.app/ npx playwright test",
-    "testMVC": "CUSTOM_URL=https://todomvc.com/examples/vanillajs/ npx playwright test"
+    "test-prod": "BASE_URL=https://single-page-application-fg5blhx72q-ey.a.run.app/ npx playwright test",
+    "test-local": "BASE_URL=http://localhost:3000 npx playwright test",
+    "prettier": "prettier --write ."
   }
 }
