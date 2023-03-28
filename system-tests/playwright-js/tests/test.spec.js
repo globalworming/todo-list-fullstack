@@ -1,15 +1,24 @@
 import { expect, test } from "@playwright/test";
 
 let ToDoListPage = require("../model/toDoList.page");
+let Steps = require("../model/Steps");
+let Asks = require("../model/Asks");
+let Ensure = require("../model/Ensure");
 test.describe.configure({ mode: "serial" });
 
 test.describe("Compliance", async () => {
   let page;
+  let steps;
+  let asks;
+  let ensure;
 
   test.beforeAll(async ({ browser }) => {
     page = await browser.newPage();
-    ToDoListPage = new ToDoListPage(page);
-    await ToDoListPage.navigate("#/");
+    ToDoListPage = new ToDoListPage(page); // FIXME get rid of this line
+    await ToDoListPage.navigate("#/");     // FIXME get rid of this line
+    steps = new Steps(page);
+    asks = new Asks(page);
+    ensure = new Ensure(page);
   });
 
   test.afterAll(async () => {
@@ -18,15 +27,9 @@ test.describe("Compliance", async () => {
 
   test.describe("ToDoList", async () => {
     test("Should be able to create ToDos", async ({}) => {
-      let length = await ToDoListPage.getListLength();
-      await test.step("Create five new tasks", async () => {
-        for (let i = 1; i < 6; i++) {
-          await ToDoListPage.createToDo("ToDo " + i);
-        }
-      });
-      await test.step("Check if the task were added successfully", async () => {
-        await expect(ToDoListPage.toDoList).toHaveCount(length + 5);
-      });
+      let length = await asks.forCurrentNumberOfTodos();
+      await steps.createFiveTodos();
+      await ensure.theCurrentNumberOfTodosIs(length + 5);
     });
 
     test("Should be able to create task with emojis", async () => {
@@ -79,19 +82,6 @@ test.describe("Compliance", async () => {
         ).toBeChecked();
       });
     });
-
-    // !!DOESN'T HAVE "select all" btn
-    /* test('Should be able to select ALL ToDos', async ({  }) => {
-            await ToDoListPage.createToDo('Toggle 1')
-            await ToDoListPage.createToDo('Toggle 2')
-            await ToDoListPage.toggleAll()
-            let checkboxes= page.locator(".toggle")
-            let checked=true;
-            for (let i=0; i<=ToDoListPage.getListLength();i++){
-             if (!checkboxes[i].checked) checked=false;
-            }
-            await expect(checked).toBeTruthy();
-           });*/
 
     test("Should not be able to add blank ToDos", async ({}) => {
       const length = await ToDoListPage.getListLength();
