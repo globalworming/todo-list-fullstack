@@ -1,6 +1,6 @@
 // playwright.config.js
 // @ts-check
-const { devices } = require('@playwright/test');
+const {devices} = require('@playwright/test');
 /**
  * @see https://playwright.dev/docs/test-configuration
  * @type {import('@playwright/test').PlaywrightTestConfig}
@@ -29,6 +29,7 @@ const config = {
         {
             name: 'chromium',
             use: {
+                baseURL: "process.env.CUSTOM_URL",
                 ...devices['Desktop Chrome'],
                 headless: false,
                 screenshot: 'on',

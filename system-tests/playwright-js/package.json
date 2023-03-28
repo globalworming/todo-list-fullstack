@@ -1,0 +1,11 @@
+{
+  "devDependencies": {
+    "@playwright/test": "^1.31.2",
+    "playwright": "^1.31.2",
+    "prettier": "2.8.7"
+  },
+  "scripts": {
+    "test": "CUSTOM_URL=https://single-page-application-fg5blhx72q-ey.a.run.app/ npx playwright test",
+    "testMVC": "CUSTOM_URL=https://todomvc.com/examples/vanillajs/ npx playwright test"
+  }
+}
