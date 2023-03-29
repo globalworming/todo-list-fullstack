@@ -16,10 +16,18 @@ class Asks {
       return await this.page.locator(`.todo-list li:nth-child(${pos})`).textContent();
     });
 
-  forOneTodo = async (pos) =>
+  forTodoAt = async (pos) =>
     await test.step(`Select ${pos} todo`, async () => {
       return await this.page.locator(`.todo-list li:nth-child(${pos})`);
     });
+
+  forLastToDo = async () =>
+    await test.step(`ask for the last todo`, async () => {
+      const pos = await this.page.locator(ToDoList.items).count();
+      return await this.page.locator(`.todo-list li:nth-child(${pos})`);
+    });
+
+
 }
 
 module.exports = Asks;

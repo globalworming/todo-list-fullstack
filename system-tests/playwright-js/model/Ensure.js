@@ -11,9 +11,15 @@ class Ensure {
       await expect(this.page.locator(ToDoList.items)).toHaveCount(i);
     });
 
-  theTaskDescriptionIs = async (cont, des) =>
-    await test.step('ensure the task description is ' + des, async () => {
-      await expect(cont).toEqual(des);
+  theTaskDescriptionIs = async (actualt, expected) =>
+    await test.step('ensure the task description is ' + expected, async () => {
+      await expect(actualt).toEqual(expected);
+    });
+
+  theDescriptionIs = async (todo, expected) =>
+    await test.step('ensure the task description is ' + expected, async () => {
+      const actual = await todo.textContent()
+      await expect(actual).toEqual(expected);
     });
   theCheckboxIsChecked = async (pos) => {
     await expect(this.page.locator(`li:nth-child(${pos}) .toggle `)).toBeChecked();

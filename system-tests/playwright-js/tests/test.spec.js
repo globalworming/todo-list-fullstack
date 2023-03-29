@@ -3,7 +3,6 @@ import { expect, test } from '@playwright/test';
 let Steps = require('../model/Steps');
 let Asks = require('../model/Asks');
 let Ensure = require('../model/Ensure');
-test.describe.configure({ mode: 'serial' });
 
 test.describe('Compliance', async () => {
   let page;
@@ -31,33 +30,23 @@ test.describe('Compliance', async () => {
     });
 
     test('Should be able to create task with emojis', async () => {
-      const length = await asks.forCurrentNumberOfTodos();
       await steps.createTodo('‎😃');
-
-      //Assertions
-      await ensure.theCurrentNumberOfTodosIs(length + 1);
-      await ensure.theTaskDescriptionIs(await await asks.forContentOfTask(await asks.forCurrentNumberOfTodos()), '‎😃');
+      const currentNumberOfToDos = await asks.forCurrentNumberOfTodos();
+      const lastsTodosDescription = await asks.forContentOfTask(currentNumberOfToDos);
+      await ensure.theTaskDescriptionIs(lastsTodosDescription, '‎😃');
     });
 
     test('Should be able to edit ToDos', async ({}) => {
       await steps.createTodo('Edit this task');
-      const length = await asks.forCurrentNumberOfTodos();
-
-      await steps.doubleClickTodo(await asks.forOneTodo(length));
-
-      await steps.fillTodo(length, 'Edited Task');
-      await page.keyboard.press('Enter');
-
-      //Assertions
-      await ensure.theTaskDescriptionIs(await (await asks.forOneTodo(length)).textContent(), 'Edited Task');
+      const todo = await asks.forLastToDo();
+      await steps.changeToDoDescription(todo, "Edited Task")
+      await ensure.theDescriptionIs(todo, 'Edited Task');
     });
 
     test('Should be able to select ToDo', async ({}) => {
       await steps.createTodo('Select this task');
       const length = await asks.forCurrentNumberOfTodos();
       await steps.selectToDo(length);
-
-      //Assertion
       await ensure.theCheckboxIsChecked(length);
     });
 
@@ -84,7 +73,7 @@ test.describe('Compliance', async () => {
       await steps.changeTasksTab('Active');
 
       //Assertions
-      await ensure.theTaskContains(await asks.forOneTodo(await asks.forCurrentNumberOfTodos()), 'Active Task');
+      await ensure.theTaskContains(await asks.forTodoAt(await asks.forCurrentNumberOfTodos()), 'Active Task');
       await ensure.theUrlContains('/active');
     });
 
@@ -95,7 +84,7 @@ test.describe('Compliance', async () => {
       await steps.changeTasksTab('Completed');
 
       //Assertions
-      await ensure.theTaskContains(await asks.forOneTodo(await asks.forCurrentNumberOfTodos()), 'Completed Task');
+      await ensure.theTaskContains(await asks.forTodoAt(await asks.forCurrentNumberOfTodos()), 'Completed Task');
       await ensure.theUrlContains('/completed');
     });
   });

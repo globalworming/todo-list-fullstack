@@ -58,10 +58,17 @@ class Steps {
       await todo.dblclick();
     });
   };
+  changeToDoDescription = async (todo, newDescription) => {
+    await test.step('change todo description to ' + newDescription, async () => {
+      await this.doubleClickTodo(todo);
+      await this.fillTodo(todo, 'Edited Task');
+      await this.page.keyboard.press('Enter');
+    });
+  };
 
-  fillTodo = async (pos, x) => {
+  fillTodo = async (todo, x) => {
     await test.step('fill the todo input', async () => {
-      await this.page.fill(`.todo-list >li:nth-child(${pos}) .edit`, `${x}`);
+      await todo.locator(".edit").fill(x);
     });
   };
 
