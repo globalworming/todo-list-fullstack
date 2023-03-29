@@ -8,5 +8,9 @@
     "test-prod": "BASE_URL=https://single-page-application-fg5blhx72q-ey.a.run.app/ npx playwright test",
     "test-local": "BASE_URL=http://localhost:3000 npx playwright test",
     "prettier": "prettier --write ."
+  },
+  "prettier": {
+    "printWidth": 120,
+    "singleQuote": true
   }
 }
