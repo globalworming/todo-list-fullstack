@@ -69,6 +69,11 @@ public class Main {
                                 .replaceAll("([a-z])([A-Z])", "$1 $2")
                                 .toLowerCase();
                         String capability = classname.get(classname.size() - 2);
+                        if (scenario.contains(" › ")) {
+                            capability = scenario.split(" › ")[0];
+                            feature = scenario.split(" › ")[1];
+                            scenario = scenario.split(" › ")[2];
+                        }
                         String status = "success";
                         if (testcaseNode.getElementsByTagName("failure").getLength() > 0) {
                             status = "failure";

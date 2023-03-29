@@ -14,7 +14,6 @@ transmit=false
 
 # process arguments
 while getopts "ts:" o; do
-  # FIXME add parameter to run all (?) tests against production
   case "${o}" in
   t)
     transmit=true
@@ -96,6 +95,20 @@ supertest() {
   )
 }
 
+playwright-js() {
+  (
+    cd system-tests/playwright-js
+    if test "$stage" = "local"; then
+      npm run test-local
+    fi
+    if test "$stage" = "prod"; then
+      npm run test-prod
+    fi
+
+    report-results . -l "$stage" -s system -i integrated-mocked-3rd-party --src playwright-js
+  )
+}
+
 postman() {
   (
     cd system-tests/postman
@@ -144,6 +157,7 @@ system-tests() {
   postman
   supertest
   serenity-rest-assured
+  playwright-js
   serenity-cucumber-browser
 }
 
