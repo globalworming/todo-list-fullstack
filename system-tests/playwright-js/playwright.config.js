@@ -1,12 +1,12 @@
 // playwright.config.js
 // @ts-check
-const { devices } = require("@playwright/test");
+const { devices } = require('@playwright/test');
 /**
  * @see https://playwright.dev/docs/test-configuration
  * @type {import('@playwright/test').PlaywrightTestConfig}
  */
 const config = {
-  testDir: "./tests",
+  testDir: './tests',
   timeout: 30 * 1000,
   expect: {
     /**
@@ -19,23 +19,23 @@ const config = {
   forbidOnly: !!process.env.CI,
   workers: process.env.CI ? 2 : undefined,
   retries: process.env.CI ? 2 : 0,
-  reporter: "html",
+  reporter: 'html',
   use: {
     actionTimeout: 0,
-    trace: "on-first-retry",
+    trace: 'on-first-retry',
   },
   /* Configure projects for major browsers */
   projects: [
     {
-      name: "chromium",
+      name: 'chromium',
       use: {
-        ...devices["Desktop Chrome"],
+        ...devices['Desktop Chrome'],
         headless: false,
-        screenshot: "on",
-        video: "on",
+        screenshot: 'on',
+        video: 'on',
         launchOptions: {
           // args: ["--headless","--no-sandbox","--use-angle=gl"]
-          args: ["--no-sandbox"],
+          args: ['--no-sandbox'],
         },
       },
     },
