@@ -1,10 +1,10 @@
-FROM node:19 as dependencies
+FROM --platform=amd64 node:19 as dependencies
 WORKDIR /app
 COPY package.json ./
 COPY package-lock.json ./
 RUN npm ci
 
-FROM node:19 as build
+FROM --platform=amd64 node:19 as build
 ARG STAGE
 WORKDIR /app
 COPY --from=dependencies /app/node_modules ./node_modules
@@ -16,7 +16,7 @@ COPY ./.env${STAGE} ./.env
 RUN npm run build
 
 # Production image, copy all the files and run next
-FROM node:19 AS runner
+FROM --platform=amd64 node:19 AS runner
 WORKDIR /app
 COPY --from=build /app/build ./build
 COPY --from=build /app/public ./public
