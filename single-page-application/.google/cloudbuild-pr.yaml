@@ -1,19 +1,19 @@
 steps:
   - id: install
-    name: node:19.1.0-alpine3.16
+    name: node:19
     dir: single-page-application
     entrypoint: npm
     args:
       - ci
   - id: eslint
-    name: node:19.1.0-alpine3.16
+    name: node:19
     dir: single-page-application
     entrypoint: npm
     args:
       - run
       - lint
   - id: test
-    name: node:19.1.0-alpine3.16
+    name: node:19
     dir: single-page-application
     entrypoint: npm
     args:
@@ -28,7 +28,7 @@ steps:
       - run
       - --component
   - id: build
-    name: node:19.1.0-alpine3.16
+    name: node:19
     dir: single-page-application
     entrypoint: npm
     args:

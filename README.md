@@ -55,3 +55,14 @@ zone = "europe-west1-d"
 * change and commit/push [.env](single-page-application/.env) to your actual bff url (go to cloud run to find it) FIXME, should be automatic
 * Configure Error Reporting notifications by [going to the console](https://console.cloud.google.com/errors) and clicking "Configure Notifications". Unfortunately, [we're unable to automate this](https://github.com/hashicorp/terraform-provider-google/issues/12068).
 * set error notification channel https://console.cloud.google.com/errors
+
+## dev
+### docker
+run everything locally with `docker compose`
+```shell
+git clone git@github.com:globalworming/todo-list-fullstack.git
+cd todo-list-fullstack/
+docker compose -f docker-compose.local.yml up
+```
+open `localhost:3000`
+
