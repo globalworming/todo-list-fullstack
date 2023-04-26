@@ -1,4 +1,4 @@
-FROM --platform=amd64 gradle:7.2.0-jdk17-alpine as gradle
+FROM --platform=amd64 gradle:jdk17-focal as gradle
 COPY --chown=gradle bff /home/app
 COPY --chown=gradle grpc /home/grpc
 WORKDIR /home/app

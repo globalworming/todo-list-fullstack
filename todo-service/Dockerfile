@@ -1,10 +1,10 @@
-FROM --platform=amd64 gradle:7.2.0-jdk17-alpine as gradle
+FROM --platform=amd64 gradle:jdk17-focal as gradle
 COPY --chown=gradle todo-service /home/app
 COPY --chown=gradle grpc /home/grpc
 WORKDIR /home/app
 # https://github.com/google/protobuf-gradle-plugin/issues/265
 RUN apk add gcompat
-RUN gradle assemble --no-daemon
+RUN gradle assemble
 
 
 
