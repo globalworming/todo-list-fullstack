@@ -1,4 +1,4 @@
-FROM --platform=amd64 gradle:jdk17-focal as gradle
+FROM --platform=arm64 gradle:jdk17-focal as gradle
 COPY --chown=gradle todo-service /home/app
 COPY --chown=gradle grpc /home/grpc
 WORKDIR /home/app
