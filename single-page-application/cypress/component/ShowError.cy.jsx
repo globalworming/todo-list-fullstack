@@ -26,5 +26,14 @@ describe('compliance', () => {
       cy.get('button').click();
       cy.get('div[role="alert"]').should('not.exist');
     });
+    it('translates exceptions to error messages', () => {
+      cy.mount(
+        <ErrorDisplayBoundary>
+          <PutErrorInContext error={new Error('{"type":"StatusRuntimeException","message":"NOT_FOUND: no such list"}')} />
+          <ShowsErrorFromContext />
+        </ErrorDisplayBoundary>,
+      );
+      cy.get('div').should('contain.text', 'no list of such name exists');
+    });
   });
 });

@@ -17,7 +17,7 @@ class SaveListTest {
         given()
                 .contentType(ContentType.JSON).body("{\"name\": \"some list\",\"toDos\": []}")
                 .when()
-                .post("http://localhost:8080/toDoLists").
+                .post("http://localhost:8001/toDoLists").
                 then()
                 .body("errors[0].path", equalTo("$.toDos"));
 
@@ -31,7 +31,7 @@ class SaveListTest {
         given()
                 .contentType(ContentType.JSON).body("{\"name\": \"some list\",\"toDos\": [{\"description\":  \"feed the cat\"}]}")
                 .when()
-                .post("http://localhost:8080/toDoLists").
+                .post("http://localhost:8001/toDoLists").
                 then()
                 .statusCode(200);
 
@@ -46,7 +46,7 @@ class SaveListTest {
                 .contentType(ContentType.JSON).body("{\"name\": \"some list\",\"toDos\": [{\"description\":  \"feed the cat\"}]}")
 
                 .when()
-                .post("http://localhost:8080/toDoLists").
+                .post("http://localhost:8001/toDoLists").
                 then()
                 .statusCode(400)
                 .body("errors[0].path", equalTo("$.name"))

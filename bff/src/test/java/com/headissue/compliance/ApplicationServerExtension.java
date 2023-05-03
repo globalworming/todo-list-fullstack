@@ -5,7 +5,9 @@ import grpc.health.v1.HealthGrpc;
 import io.restassured.http.ContentType;
 import org.awaitility.Awaitility;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
+import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.mockito.Mockito;
 
 import java.util.concurrent.TimeUnit;
 
@@ -15,7 +17,7 @@ import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
 import static org.mockito.Mockito.mock;
 
 public class ApplicationServerExtension
-        implements BeforeAllCallback, ExtensionContext.Store.CloseableResource {
+        implements BeforeAllCallback, ExtensionContext.Store.CloseableResource, BeforeEachCallback {
 
     public static HealthGrpc.HealthBlockingStub toDoHealthStub = mock(HealthGrpc.HealthBlockingStub.class, RETURNS_DEEP_STUBS);
     public static ToDoServiceGrpc.ToDoServiceBlockingStub toDoServiceStub = mock(ToDoServiceGrpc.ToDoServiceBlockingStub.class, RETURNS_DEEP_STUBS);
@@ -44,6 +46,12 @@ public class ApplicationServerExtension
     }
 
     @Override
+    public void beforeEach(ExtensionContext extensionContext) throws Exception {
+        Mockito.reset(toDoHealthStub);
+        Mockito.reset(toDoServiceStub);
+    }
+
+    @Override
     public void close() {
         app.interrupt();
     }
@@ -52,13 +60,14 @@ public class ApplicationServerExtension
         try {
             return given()
                     .accept(ContentType.JSON)
-                    .get("http://localhost:8080")
+                    .get("http://localhost:8001")
                     .then()
                     .extract()
                     .statusCode();
-        } catch (Exception e){
+        } catch (Exception e) {
             return 0;
         }
-     }
+    }
+
 
 }

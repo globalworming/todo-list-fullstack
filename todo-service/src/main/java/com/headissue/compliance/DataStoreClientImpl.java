@@ -7,10 +7,12 @@ import com.headissue.compliance.todo.v1.Todo;
 import java.util.ArrayList;
 import java.util.List;
 
+import static io.grpc.Status.Code.NOT_FOUND;
+
 public class DataStoreClientImpl implements DataStoreClient {
     public static final String TO_DO_LIST_ITEM = "ToDoListItem";
     public static final String TO_DO_LIST = "ToDoList";
-    private final Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
+    private final Datastore datastore = DatastoreOptions.newBuilder().setProjectId("life-compliance-48539").build().getService();
 
     @Override
     public void createTodoList(String name, List<Todo.ToDo> toDosList) {
@@ -46,6 +48,10 @@ public class DataStoreClientImpl implements DataStoreClient {
     @Override
     public Todo.ToDoList queryToDoList(String id) {
         Entity toDoList = datastore.get(toDoListKey(id));
+        if (toDoList == null) {
+            throw new DatastoreException(NOT_FOUND.value(), "no such list", "");
+        }
+
         Query<Entity> query =
                 Query.newEntityQueryBuilder()
                         .setKind(TO_DO_LIST_ITEM)
