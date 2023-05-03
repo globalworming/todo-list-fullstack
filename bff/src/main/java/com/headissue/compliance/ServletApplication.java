@@ -35,7 +35,7 @@ public class ServletApplication {
     }
 
     public static void test(HealthGrpc.HealthBlockingStub todoHealthStub, ToDoServiceGrpc.ToDoServiceBlockingStub toDoServiceStub) {
-        start(todoHealthStub, toDoServiceStub, 8080);
+        start(todoHealthStub, toDoServiceStub, 8001);
     }
 
     private static void start(HealthGrpc.HealthBlockingStub todoHealthStub, ToDoServiceGrpc.ToDoServiceBlockingStub toDoServiceStub, int port) {
@@ -68,6 +68,7 @@ public class ServletApplication {
             server.destroy();
         }
     }
+
     private static int getPort() {
         String portEnvVar = System.getenv().get("PORT");
         int port = 8080;
