@@ -69,6 +69,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ToDoList'
+        '400':
+          description: client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
 components:
   schemas:
     ClientError:
@@ -152,4 +158,13 @@ components:
           type: string
         error:
           type: string
-
+    GenericError:
+      type: object
+      required:
+        - type
+        - message
+      properties:
+        type:
+          type: string
+        message:
+          type: string

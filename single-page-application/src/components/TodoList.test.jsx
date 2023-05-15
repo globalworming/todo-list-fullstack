@@ -30,6 +30,10 @@ function expectListNameToBe(name) {
   expect(screen.getByText(name)).toBeInTheDocument();
 }
 
+function expectTheErrorContentToBe(text) {
+  expect(screen.getByRole('alert')).toHaveTextContent(text);
+}
+
 async function changeListNameTo(name) {
   await user.click(screen.getByTestId('edit-name'));
   await user.keyboard('{Control>}A{/Control}');
@@ -65,6 +69,7 @@ describe('compliance.ToDo List', () => {
     });
   });
   describe('Save List', () => {
+    // FIXME name
     it('can be added', async () => {
       server.use(
         rest.post(`${process.env.REACT_APP_GATEWAY}/toDoLists`, async (req, res, ctx) => {
@@ -105,6 +110,25 @@ describe('compliance.ToDo List', () => {
         expectListNameToBe('my list');
         expect(screen.getByTestId('count')).toHaveTextContent('2 items left');
         expect(screen.getByText('feed whale')).toBeInTheDocument();
+      });
+    });
+
+    it('displays an error when no such list exists', async () => {
+      server.use(
+        rest.get(`${process.env.REACT_APP_GATEWAY}/toDoLists/does%20not%20exist`, (req, res, ctx) => res(ctx.status(400), ctx.json(
+          { type: 'StatusRuntimeException', message: 'NOT_FOUND: no such list' },
+        ))),
+      );
+      render(todoList);
+
+      await act(async () => {
+        await user.click(screen.getByTestId('load-list'));
+        await user.keyboard('does not exist');
+        await user.keyboard('{Enter}');
+      });
+
+      await waitFor(() => {
+        expectTheErrorContentToBe('{"type":"StatusRuntimeException","message":"NOT_FOUND: no such list"} dismiss');
       });
     });
   });
