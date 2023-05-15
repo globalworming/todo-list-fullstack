@@ -21,7 +21,7 @@ function SaveList() {
       return;
     }
     if (toDoList.toDos.length <= 0) {
-      errorCtx.setError(new Error('toDo list has no items'));
+      errorCtx.setError(new Error('toDo list has no items.'));
       return;
     }
     const toDoListToSend = new ToDoList(

@@ -69,6 +69,14 @@ describe('compliance.ToDo List', () => {
     });
   });
   describe('Save List', () => {
+    it('shows error when no items', async () => {
+      render(todoList);
+      await user.click(screen.getByTestId('save-list'));
+      await waitFor(() => {
+        expectTheErrorContentToBe('toDo list has no items.');
+      });
+    });
+
     // FIXME name
     it('can be added', async () => {
       server.use(
@@ -128,7 +136,7 @@ describe('compliance.ToDo List', () => {
       });
 
       await waitFor(() => {
-        expectTheErrorContentToBe('{"type":"StatusRuntimeException","message":"NOT_FOUND: no such list"} dismiss');
+        expectTheErrorContentToBe('No list of that name found.');
       });
     });
   });

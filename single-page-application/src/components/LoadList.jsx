@@ -48,6 +48,7 @@ function LoadList() {
     return (
       <>
         <input
+            // FIXME shouldn't there be a "submit" button or something like that?
         /* eslint-disable-next-line jsx-a11y/no-autofocus */
           autoFocus
           value={listToLoad}
