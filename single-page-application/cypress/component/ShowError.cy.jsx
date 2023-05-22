@@ -33,7 +33,7 @@ describe('compliance', () => {
           <ShowsErrorFromContext />
         </ErrorDisplayBoundary>,
       );
-      cy.get('div').should('contain.text', 'no list of such name exists');
+      cy.get('div').should('contain.text', 'No list of that name found.');
     });
   });
 });
