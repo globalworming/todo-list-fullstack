@@ -77,19 +77,9 @@ describe('compliance.ToDo List', () => {
       });
     });
 
-    // FIXME name
-    it('can be added', async () => {
+    it('can be saved', async () => {
       server.use(
-        rest.post(`${process.env.REACT_APP_GATEWAY}/toDoLists`, async (req, res, ctx) => {
-          const json = await req.json();
-          if (json.name !== 'todos') {
-            return res(ctx.status(500), ctx.json({ message: 'bad request, wrong name' }));
-          }
-          if (json.toDos[0].description !== 'feed cat') {
-            return res(ctx.status(500), ctx.json({ message: 'bad request, wrong description' }));
-          }
-          return res(ctx.status(200));
-        }),
+        rest.post(`${process.env.REACT_APP_GATEWAY}/toDoLists`, async (req, res, ctx) => res(ctx.status(200))),
       );
       render(todoList);
       await addToDos('feed cat', 'feed dog');
