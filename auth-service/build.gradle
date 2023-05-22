@@ -1,0 +1,84 @@
+plugins {
+    id "java"
+    id "application"
+    id 'com.google.protobuf' version '0.8.18'
+    id "com.github.johnrengelman.shadow" version "7.1.2"
+    id 'com.google.cloud.tools.jib' version '3.3.1'
+}
+
+mainClassName = 'com.headissue.compliance.GrpcServer'
+group 'com.headissue.compliance'
+version '1.0-SNAPSHOT'
+
+ext {
+    grpcVersion = '1.51.0'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // grpc service
+    runtimeOnly "io.grpc:grpc-netty-shaded:${grpcVersion}"
+    implementation "io.grpc:grpc-protobuf:${grpcVersion}"
+    implementation "io.grpc:grpc-stub:${grpcVersion}"
+    implementation "io.grpc:grpc-services:${grpcVersion}"
+    compileOnly 'org.apache.tomcat:annotations-api:6.0.53'
+
+    implementation'com.google.cloud:google-cloud-datastore:2.12.5'
+
+    //logging
+    implementation 'ch.qos.logback:logback-classic:1.4.5'
+    implementation 'com.google.cloud:google-cloud-logging-logback:0.130.7-alpha'
+
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src/main/java', 'build/generated/source/proto/main/java', 'build/generated/source/proto/main/grpc']
+        }
+        proto {
+            srcDirs = ['../grpc']
+        }
+    }
+
+    test {
+        java {
+            srcDirs = ['src/test/java']
+        }
+    }
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_16
+    targetCompatibility = JavaVersion.VERSION_16
+}
+
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:3.21.7"
+    }
+    plugins {
+        grpc {
+            artifact = 'io.grpc:protoc-gen-grpc-java:1.51.0'
+        }
+    }
+    generateProtoTasks {
+        all()*.plugins {
+            grpc {}
+        }
+    }
+}
+
+shadowJar {
+    mergeServiceFiles()
+}
+
+jib {
+    to {
+        image = 'gcr.io/PROJECT_ID/todo-service'
+        credHelper = 'gcr'
+    }
+}

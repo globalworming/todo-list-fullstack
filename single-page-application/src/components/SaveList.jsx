@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { ErrorContext } from '../context/ErrorContext';
 import ToDoList from '../model/ToDoList';
 import ToDo from '../model/ToDo';
@@ -10,6 +10,11 @@ function SaveList() {
   const errorCtx = useContext(ErrorContext);
   const [saved, setSaved] = useState(false);
   const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setSaved(false), 3000);
+    return () => clearTimeout(timer);
+  }, [saved]);
 
   function saveList() {
     if (!toDoList) {
@@ -59,11 +64,11 @@ function SaveList() {
   }
 
   if (saved) {
-    return <button type="button" disabled data-testid="saved-list"> saved</button>;
+    return <button type="button" disabled data-testid="saved-list">saved</button>;
   }
 
   if (saving) {
-    return <button type="button" disabled> saving...</button>;
+    return <button type="button" disabled>saving...</button>;
   }
   return (
 
