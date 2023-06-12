@@ -24,7 +24,6 @@ dependencies {
     implementation "io.grpc:grpc-protobuf:${grpcVersion}"
     implementation "io.grpc:grpc-stub:${grpcVersion}"
     implementation "io.grpc:grpc-services:${grpcVersion}"
-    compileOnly 'org.apache.tomcat:annotations-api:6.0.53'
 
     implementation'com.google.cloud:google-cloud-datastore:2.12.5'
 

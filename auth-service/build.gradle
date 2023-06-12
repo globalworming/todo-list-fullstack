@@ -78,7 +78,7 @@ shadowJar {
 
 jib {
     to {
-        image = 'gcr.io/PROJECT_ID/todo-service'
+        image = 'gcr.io/PROJECT_ID/auth-service'
         credHelper = 'gcr'
     }
 }

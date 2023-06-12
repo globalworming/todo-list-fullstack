@@ -42,9 +42,7 @@ public class SaveListStepDefinitions {
   }
 
   @Then("{actor} should see the list is saved")
-  public void theyShouldSeeTheListIsSaved(Actor actor) {
-
-  }
+  public void theyShouldSeeTheListIsSaved(Actor actor) {}
 
   private static class CreateTodoList implements Performable {
     private final String name;

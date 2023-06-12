@@ -1,5 +1,5 @@
 FROM gradle:jdk17-focal as gradle
-COPY --chown=gradle todo-service /home/app
+COPY --chown=gradle auth-service /home/app
 COPY --chown=gradle grpc /home/grpc
 WORKDIR /home/app
 RUN gradle assemble
