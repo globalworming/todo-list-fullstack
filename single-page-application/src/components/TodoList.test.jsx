@@ -52,6 +52,26 @@ async function addToDos(...items) {
   });
 }
 
+async function listIsSaved() {
+  await waitFor(() => {
+    expect(screen.getByTestId('saved-list')).toBeInTheDocument();
+  });
+}
+
+async function listWasSavedOnce() {
+  await addToDos('feed cat', 'feed dog');
+  await user.click(screen.getByTestId('save-list'));
+  await listIsSaved();
+}
+
+async function buttonGoesBackToInitalState() {
+  await waitFor(() => {
+    expect(screen.getByTestId('save-list')).toBeInTheDocument();
+  }, {
+    timeout: 5000,
+  });
+}
+
 describe('compliance.ToDo List', () => {
   describe('List Name', () => {
     it('can be changed', async () => {
@@ -84,9 +104,18 @@ describe('compliance.ToDo List', () => {
       render(todoList);
       await addToDos('feed cat', 'feed dog');
       await user.click(screen.getByTestId('save-list'));
-      await waitFor(() => {
-        expect(screen.getByTestId('saved-list')).toBeInTheDocument();
-      });
+      await listIsSaved();
+    });
+
+    it('can be saved multiple times', async () => {
+      server.use(
+        rest.post(`${process.env.REACT_APP_GATEWAY}/toDoLists`, async (req, res, ctx) => res(ctx.status(200))),
+      );
+      render(todoList);
+      await listWasSavedOnce();
+      await buttonGoesBackToInitalState();
+      await user.click(screen.getByTestId('save-list'));
+      await listIsSaved();
     });
   });
   describe('Load List', () => {

@@ -24,6 +24,7 @@ dependencies {
     implementation "io.grpc:grpc-protobuf:${grpcVersion}"
     implementation "io.grpc:grpc-stub:${grpcVersion}"
     implementation "io.grpc:grpc-services:${grpcVersion}"
+    compileOnly 'org.apache.tomcat:annotations-api:6.0.53'
 
     implementation'com.google.cloud:google-cloud-datastore:2.12.5'
 
@@ -77,7 +78,7 @@ shadowJar {
 
 jib {
     to {
-        image = 'gcr.io/PROJECT_ID/todo-service'
+        image = 'gcr.io/PROJECT_ID/auth-service'
         credHelper = 'gcr'
     }
 }

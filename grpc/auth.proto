@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package com.headissue.compliance.todo.v1;
+
+service AuthService {
+  rpc ExchangeCodeForToken(ExchangeCodeForTokenParameter) returns (ExchangeCodeForTokenResponse);
+}
+
+message ExchangeCodeForTokenParameter {
+  string code = 1;
+}
+message ExchangeCodeForTokenResponse {
+  string accessToken = 1;
+}
